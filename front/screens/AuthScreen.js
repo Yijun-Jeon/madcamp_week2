@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform,Button } from 'react-native';
 
-//const API_URL = Platform.OS === 'ios' ? 'http://192.249.18.107:5000' : 'http://10.0.2.2:5000';
- const API_URL = 'http://192.249.18.107:443';
-//const API_URL = 'http://143.248.170.39:443';
+// const API_URL = Platform.OS === 'ios' ? 'http://localhost:443' : 'http://10.0.2.2:443';
+const API_URL = 'http://192.249.18.107:443';
 
-
-const AuthScreen = () => {
+function AuthScreen({navigation}) {
 
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
@@ -79,7 +77,14 @@ const AuthScreen = () => {
 
     const getMessage = () => {
         const status = isError ? `Error: ` : `Success: `;
+        intentTest();
         return status + message;
+    }
+
+    const intentTest = () =>{
+        if(!isError){
+            navigation.navigate('Details');
+        }
     }
 
     return (
@@ -98,15 +103,7 @@ const AuthScreen = () => {
                         <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
                             <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonAlt}>
-                            <Text style={styles.buttonAltText}>{'Log In with Facebook'}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonAlt}>
-                            <Text style={styles.buttonAltText}>{'Log In with KakaoTalk'}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonAlt}>
-                            <Text style={styles.buttonAltText}>{'Log In with Google'}</Text>
-                        </TouchableOpacity>
+                         {/* <Button title="Go to Details" onPress={() => navigation.navigate('Details')}/> */}
                     </View>    
                 </View>
             </View>
@@ -190,6 +187,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginVertical: '5%',
     },
-});
+  });
 
 export default AuthScreen;
