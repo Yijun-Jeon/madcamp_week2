@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
 
-// const API_URL = Platform.OS === 'ios' ? 'http://localhost:443' : 'http://10.0.2.2:443';
-const API_URL = 'http://143.248.170.39:443';
+//const API_URL = Platform.OS === 'ios' ? 'http://192.249.18.107:5000' : 'http://10.0.2.2:5000';
+ const API_URL = 'http://192.249.18.107:443';
+//const API_URL = 'http://143.248.170.39:443';
+
 
 const AuthScreen = () => {
 
@@ -95,6 +97,15 @@ const AuthScreen = () => {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
                             <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonAlt}>
+                            <Text style={styles.buttonAltText}>{'Log In with Facebook'}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonAlt}>
+                            <Text style={styles.buttonAltText}>{'Log In with KakaoTalk'}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonAlt}>
+                            <Text style={styles.buttonAltText}>{'Log In with Google'}</Text>
                         </TouchableOpacity>
                     </View>    
                 </View>
