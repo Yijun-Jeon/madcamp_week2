@@ -18,6 +18,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.madcamp-week2.game",
       "supportsTablet": true
     },
     "android": {
