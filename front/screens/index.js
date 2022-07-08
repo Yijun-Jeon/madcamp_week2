@@ -1,3 +1,4 @@
 import AuthScreen from './AuthScreen';
+import RoomScreen from './RoomScreen';
 
-export { AuthScreen };
+export { AuthScreen, RoomScreen };
