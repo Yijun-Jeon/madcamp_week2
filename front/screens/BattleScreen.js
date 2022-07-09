@@ -21,8 +21,21 @@ function BattleScreen({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"} />
-            
+            <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                    <TouchableOpacity style={styles.hpbar}>
+                        <Text style={styles.buttonText}> 100/100 </Text>
+                    </TouchableOpacity>
+                    <Image style={styles.characterImage} source={require('../public/images/pikachu_battle.gif')}/>
+                </View>
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                    <Image style={styles.characterImage} source={require('../public/images/paili_battle_back.gif')}/>
+                    <TouchableOpacity style={styles.hpbar}>
+                        <Text style={styles.buttonText}> 100/100 </Text>
+                    </TouchableOpacity>
+                </View>
+            </ImageBackground>
+
             <View style={styles.interface}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                     <TouchableOpacity style={styles.button}>
@@ -72,10 +85,21 @@ function BattleScreen({ route, navigation }) {
         alignItems: 'center',
         margin: 5,
     },
+    hpbar: {
+        width: '50%',
+        backgroundColor: 'black',
+        height: 55,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     buttonText: {
         color: 'white',
         fontSize: 16,
         fontWeight: '400'
+    },
+    characterImage: {
+        margin: 30
     }
   }); 
 
