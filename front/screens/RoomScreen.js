@@ -14,6 +14,10 @@ function RoomScreen({ route, navigation }) {
     });
 
     const [roomCode, setRoomCode] = useState('')
+    
+    const moveToSelect = () =>{
+        navigation.navigate('Select');
+    }
 
     socket.emit("chatting", "from front");
 
@@ -30,7 +34,7 @@ function RoomScreen({ route, navigation }) {
                 <Text style={styles.buttonAltText}>JOIN GAME</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.buttonAlt}>
+            <TouchableOpacity style={styles.buttonAlt} onPress={moveToSelect}>
                 <Text style={styles.buttonAltText}>CREATE GAME</Text>
             </TouchableOpacity>
 
