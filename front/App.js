@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { AuthScreen ,RoomScreen} from './screens';
+import { AuthScreen ,RoomScreen, BattleScreen} from './screens';
 import { render } from 'react-dom';
 
 
@@ -19,6 +19,10 @@ function App() {
         <Stack.Screen
           name="Room"
           component={RoomScreen}
+        />
+        <Stack.Screen
+          name="Battle"
+          component={BattleScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

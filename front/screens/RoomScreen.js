@@ -1,14 +1,21 @@
 import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput} from 'react-native';
 import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
 import randomCodeGenerator from '../utils/randomCodeGenerator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {Room1,Room2} from './';
+import io from 'socket.io-client';
+
+const SOCKET_URL ='http://192.249.18.107:443';
 
 function RoomScreen({ route, navigation }) {
+    const socket = io.connect(SOCKET_URL, {
+      transports: ['websocket'],
+      reconnectionAttempts: 15 //Nombre de fois qu'il doit réessayer de se connecter
+    });
 
-    //const {userName} = route.params;
     const [roomCode, setRoomCode] = useState('')
+
+    socket.emit("chatting", "from front");
 
     return (
         <ImageBackground source={require('../public/images/roomback.png')} style={styles.image}>
@@ -29,7 +36,7 @@ function RoomScreen({ route, navigation }) {
 
         </ImageBackground>
     );
-  })
+  }
 
   const styles = StyleSheet.create({
     image: {
