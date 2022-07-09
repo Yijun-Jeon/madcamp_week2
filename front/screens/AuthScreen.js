@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform,Button } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 
 // const API_URL = Platform.OS === 'ios' ? 'http://localhost:443' : 'http://10.0.2.2:443';
 const API_URL = 'http://192.249.18.107:443';
@@ -48,6 +48,7 @@ function AuthScreen({navigation}) {
             name,
             password,
         };
+        console.log(payload.name);
         fetch(`${API_URL}/${isLogin ? 'login' : 'signup'}`, {
             method: 'POST',
             headers: {
@@ -58,6 +59,7 @@ function AuthScreen({navigation}) {
         .then(async res => { 
             try {
                 const jsonRes = await res.json();
+                console.log(jsonRes.name);
                 if (res.status !== 200) {
                     setIsError(true);
                     setMessage(jsonRes.message);
@@ -77,13 +79,14 @@ function AuthScreen({navigation}) {
 
     const getMessage = () => {
         const status = isError ? `Error: ` : `Success: `;
-        intentTest();
+        console.log();
+        moveToRoom();
         return status + message;
     }
 
-    const intentTest = () =>{
+    const moveToRoom= () =>{
         if(!isError){
-            navigation.navigate('Details');
+            navigation.navigate('Room',{userName: name});
         }
     }
 
@@ -94,7 +97,7 @@ function AuthScreen({navigation}) {
                 <View style={styles.form}>
                     <View style={styles.inputs}>
                         <TextInput style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={setEmail}></TextInput>
-                        {!isLogin && <TextInput style={styles.input} placeholder="Name" onChangeText={setName}></TextInput>}
+                        {!isLogin && <TextInput style={styles.input} placeholder="Name" onChangeText={n => setName(n.target.value)}></TextInput>}
                         <TextInput secureTextEntry={true} style={styles.input} placeholder="Password" onChangeText={setPassword}></TextInput>
                         <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{message ? getMessage() : null}</Text>
                         <TouchableOpacity style={styles.button} onPress={onSubmitHandler}>
@@ -103,8 +106,7 @@ function AuthScreen({navigation}) {
                         <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
                             <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
                         </TouchableOpacity>
-                         {/* <Button title="Go to Details" onPress={() => navigation.navigate('Details')}/> */}
-                    </View>    
+                    </View>   
                 </View>
             </View>
         </ImageBackground>
