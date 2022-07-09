@@ -67,6 +67,7 @@ function AuthScreen({navigation}) {
                     onLoggedIn(jsonRes.token);
                     setIsError(false);
                     setMessage(jsonRes.message);
+                    moveToRoom();
                 }
             } catch (err) {
                 console.log(err);
@@ -80,13 +81,12 @@ function AuthScreen({navigation}) {
     const getMessage = () => {
         const status = isError ? `Error: ` : `Success: `;
         console.log();
-        moveToRoom();
         return status + message;
     }
 
     const moveToRoom= () =>{
         if(!isError){
-            navigation.navigate('Room',{userName: name});
+            navigation.navigate('Room');
         }
     }
 

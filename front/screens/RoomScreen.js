@@ -2,7 +2,6 @@ import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput} from
 import React, { useState } from 'react';
 import randomCodeGenerator from '../utils/randomCodeGenerator';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {Room1,Room2} from './';
 import io from 'socket.io-client';
 
 const SOCKET_URL ='http://192.249.18.107:443';

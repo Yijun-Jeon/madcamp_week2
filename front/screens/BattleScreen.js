@@ -21,8 +21,13 @@ function BattleScreen({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"} />
-            
+            <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                    <Text style={styles.buttonText}>{skill1}</Text>
+                    <Image source={require('../public/images/pikachu.gif')}/>
+                </View>
+            </ImageBackground>
+
             <View style={styles.interface}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                     <TouchableOpacity style={styles.button}>

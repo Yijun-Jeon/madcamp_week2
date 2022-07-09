@@ -28,19 +28,19 @@ function SelectScreen({navigation}){
             <View style={{flex: 4}}>
                 <View style={styles.images}>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/pikachu.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/pikachu.gif')}></Image>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/paili.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/paili.gif')}></Image>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/kkobugi.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/kkobugi.gif')}></Image>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/isanghaessi.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/isanghaessi.gif')}></Image>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/myu.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/myu.gif')}></Image>
                     </TouchableOpacity>
                 </View>
                 <View style={{flex: 1.3}}>
