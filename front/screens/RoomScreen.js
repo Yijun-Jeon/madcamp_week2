@@ -1,19 +1,32 @@
-import { View, Text, ImageBackground,StyleSheet,TouchableOpacity} from 'react-native';
+import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput} from 'react-native';
+import React, { useState } from 'react';
+import {Link} from 'react-router-dom';
+import randomCodeGenerator from '../utils/randomCodeGenerator';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {Room1,Room2} from './';
 
 function RoomScreen({ route, navigation }) {
-    const {userName} = route.params;
+
+    //const {userName} = route.params;
+    const [roomCode, setRoomCode] = useState('')
+
     return (
         <ImageBackground source={require('../public/images/roomback.png')} style={styles.image}>
             <View style={styles.card}>
-                <Text style={styles.heading}>Name: {JSON.stringify(userName)}</Text>
+                <Text style={styles.heading}>User Name:</Text>
+                <Text style={styles.heading}>Temp</Text>
             </View>
+
+            <TextInput secureTextEntry={true} style={styles.input} placeholder="Game Code" onChange={(event) => setRoomCode(event.target.value)}></TextInput>
+            
             <TouchableOpacity style={styles.buttonAlt}>
-                <Text style={styles.buttonAltText}>방 만들기</Text>
+                <Text style={styles.buttonAltText}>JOIN GAME</Text>
             </TouchableOpacity>
+            
             <TouchableOpacity style={styles.buttonAlt}>
-                <Text style={styles.buttonAltText}>방 입장하기</Text>
+                <Text style={styles.buttonAltText}>CREATE GAME</Text>
             </TouchableOpacity>
+
         </ImageBackground>
     );
   }
@@ -30,16 +43,15 @@ function RoomScreen({ route, navigation }) {
         width: '40%',
         marginTop: '15%',
         borderRadius: 20,
-        maxHeight: 200,
+        maxHeight: 150,
         paddingBottom: '30%',
         marginLeft: 30,
     },
     heading: {
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: 'bold',
         marginLeft: '10%',
         marginTop: '5%',
-        marginBottom: '30%',
         color: 'black',
     },
     form: {
