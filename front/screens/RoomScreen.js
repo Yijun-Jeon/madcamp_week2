@@ -9,6 +9,10 @@ function RoomScreen({ route, navigation }) {
 
     //const {userName} = route.params;
     const [roomCode, setRoomCode] = useState('')
+    
+    const moveToSelect = () =>{
+        navigation.navigate('Select');
+    }
 
     return (
         <ImageBackground source={require('../public/images/roomback.png')} style={styles.image}>
@@ -23,7 +27,7 @@ function RoomScreen({ route, navigation }) {
                 <Text style={styles.buttonAltText}>JOIN GAME</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.buttonAlt}>
+            <TouchableOpacity style={styles.buttonAlt} onPress={moveToSelect}>
                 <Text style={styles.buttonAltText}>CREATE GAME</Text>
             </TouchableOpacity>
 
