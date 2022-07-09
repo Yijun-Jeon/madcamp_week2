@@ -1,7 +1,9 @@
 import { View, Text,TouchableOpacity, StyleSheet,ImageBackground,Image} from 'react-native';
 import * as React from 'react';
 
-function SelectScreen({navigation}){
+function SelectScreen({route, navigation}){
+
+    const roomCode = route.params.roomCode;
 
     const moveToBattle = () =>{
         navigation.navigate('Battle')
@@ -9,6 +11,10 @@ function SelectScreen({navigation}){
 
     return(
         <ImageBackground source={require('../public/images/select.jpg')} style={styles.image}>
+            <View style={{flex: 0.2, alignItems:'center', justifyContent:'flex-end',marginTop:50}}>
+                <Text style={{}}>Room Code</Text>
+                <Text style={{}}>{roomCode}</Text>
+            </View>
             <View style={{flex: 5}}>
                 <View style={styles.card}>
                     <View style={{flex: 1, alignItems:'flex-end',justifyContent:'space-evenly'}}>
@@ -28,23 +34,23 @@ function SelectScreen({navigation}){
             <View style={{flex: 4}}>
                 <View style={styles.images}>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/pikachu.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/pikachu.gif')}></Image>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/paili.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/paili.gif')}></Image>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/kkobugi.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/kkobugi.gif')}></Image>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/isanghaessi.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/isanghaessi.gif')}></Image>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../public/images/myu.gif')} style={styles.buttonAltText}></Image>
+                        <Image source={require('../public/images/myu.gif')}></Image>
                     </TouchableOpacity>
                 </View>
                 <View style={{flex: 1.3}}>
-                    <TouchableOpacity style={{ width: '50%',borderWidth: 2,marginLeft:60, marginTop:30,borderRadius:50, height: 40,backgroundColor:'yellow', borderColor: 'red',justifyContent: 'center',alignItems: 'center',marginVertical: 5}} onPress={moveToBattle}>
+                    <TouchableOpacity style={{ width: '50%',borderWidth: 2,marginLeft:60,borderRadius:50, height: 40,backgroundColor:'yellow', borderColor: 'red',justifyContent: 'center',alignItems: 'center',marginVertical: 5}} onPress={moveToBattle}>
                         <Text style={styles.buttonAltText}>OK</Text>
                     </TouchableOpacity>
                 </View>
@@ -57,13 +63,12 @@ const styles = StyleSheet.create({
     image: {
         flex: 1,
         width: '100%',
-        alignItems: 'center',
+        alignItems:'center',
     },  
     card: {
         flex: 1,
         flexDirection: 'row',
         backgroundColor: 'rgba(71, 255, 136, 0.3)',
-        marginTop: '30%',
         marginBottom:'10%',
         borderRadius: 20,
         width: 300,

@@ -59,7 +59,6 @@ function AuthScreen({navigation}) {
         .then(async res => { 
             try {
                 const jsonRes = await res.json();
-                console.log(jsonRes.name);
                 if (res.status !== 200) {
                     setIsError(true);
                     setMessage(jsonRes.message);
@@ -67,6 +66,7 @@ function AuthScreen({navigation}) {
                     onLoggedIn(jsonRes.token);
                     setIsError(false);
                     setMessage(jsonRes.message);
+                    moveToRoom(jsonRes.name);
                 }
             } catch (err) {
                 console.log(err);
@@ -79,12 +79,10 @@ function AuthScreen({navigation}) {
 
     const getMessage = () => {
         const status = isError ? `Error: ` : `Success: `;
-        console.log();
-        moveToRoom();
         return status + message;
     }
 
-    const moveToRoom= () =>{
+    const moveToRoom= (name) =>{
         if(!isError){
             navigation.navigate('Room',{userName: name});
         }
