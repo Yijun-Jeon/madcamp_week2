@@ -1,5 +1,5 @@
 import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Image,Button,ButtonGroup,ActivityIndicator} from 'react-native';
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useInsertionEffect} from 'react';
 import io from 'socket.io-client';
 import {Pokemon, pokemons} from '..//utils/character/Pokemon'
 
@@ -40,14 +40,55 @@ function BattleScreen({ route, navigation }) {
     }, [])
 
     //initialize game state
-    const [gameOver, setGameOver] = useState(true)
+    const [gameOver, setGameOver] = useState(false)
     const [winner, setWinner] = useState('')
-    const [turn, setTurn] = useState('')
-    const [player1_hp, setPlayer1Hp] = useState([])
-    const [player2_hp, setPlayer2Hp] = useState([])
+    const [turn, setTurn] = useState('1')
+    const [player1_hp, setPlayer1Hp] = useState(500)
+    const [player2_hp, setPlayer2Hp] = useState(500)
     const [player1_pokemon, setPlayer1Pokemon] = useState([pokemon])
     const [player2_pokemon, setPlayer2Pokemon] = useState([])
+    const [maxHp,setMaxHp] = useState(500)
 
+    const [myTurn, setMyTurn] = useState(1)
+    const [start, setStart] = useState(false);
+
+    const skill1 = pokemon.skills[0].name;
+    const skill2 = pokemon.skills[1].name;
+    const skill3 = pokemon.skills[2].name;
+    const skill4 = pokemon.skills[3].name;
+
+    // 화면 첫 실행, 새로고침
+    useEffect(() =>{
+
+        // socket.emit('join',{
+        //     room: roomCode,
+        // });
+
+        // socket.on('getMyTurn',({myTurn}) =>{
+        //     setMyTurn(myTurn);
+        //     if(myTurn == 2){
+        //         setStart(true);
+        //     }
+        // })
+
+        if(player1_hp == 0){
+            setGameOver(true);
+            setWinner(2);
+        }else if(player2_hp == 0){
+            setGameOver(true);
+            setWinner(1);
+        }
+
+    },[])
+
+    useEffect(()=>{
+        // socket.emit('sendMyPokemon',{
+        //     myPokemon: pokemon,
+        // })
+        // socket.on("getPokemonEnemy",({pokemonEnemy}) =>{
+        //     setPokemonEnemy(pokemonEnemy);
+        // })
+    },[start])
 
     useEffect(() => {
         socket.on("roomData", ({ users }) => {
@@ -55,7 +96,9 @@ function BattleScreen({ route, navigation }) {
             if(users.length==2){
                 //console.log("pokemon setting..."+users[0].pokemon.name+users[1].pokemon.name)
                 setPlayer1Pokemon(users[0].pokemon)
+                //setPlayer1Hp(player1_pokemon.health);
                 setPlayer2Pokemon(users[1].pokemon)
+                //setPlayer2Hp(player2_pokemon.health);
             }
         })
         
@@ -102,18 +145,102 @@ function BattleScreen({ route, navigation }) {
 
     //runs once on component mount
     
+        
+        // turn 소켓 받는 함수 넣고
+        // socket.on('receiveTurn', ({turn}) => {
+        //     setTurn(turn)
+        // });
+
+    useEffect(() =>{
+        // 버튼 enable
+    },[turn])
+
+    useEffect(() =>{
+        if(gameOver){
+            console.log('over');
+            console.log(winner);
+            navigation.navigate("End");
+        }
+    },[gameOver])
+
+    function pressSkill(idx){
+        return [pokemon.skills[idx].name,
+                 pokemon.skills[idx].type,
+                 pokemon.skills[idx].damage,
+                 pokemon.skills[idx].target];        
+    }
+    function checkDead(hp,damage){
+        if(hp - damage <= 0)
+            return 0;
+        else
+            return hp - damage;
+    }
+    function ckeckBuff(hp,buff){
+        if(hp + buff >= maxHp)
+            return maxHp;
+        else
+            return hp + buff;
+    }
+    const pressSkill1 = () => {
+        if(turn == myTurn){
+            const skill = pressSkill(0);
+            const skillName = skill[0];
+            const skillType = skill[1];
+            const skillDamage = skill[2];
+            const skillTarget = skill[3];
+
+            switch(skillType){
+                case '공격':
+                    setPlayer2Hp(checkDead(player2_hp,skillDamage));
+                    console.log('attack');
+                    console.log(player2_pokemon.health);
+                    break;
+                case '버프':
+                    // if(skillTarget == 'self'){
+                    //     set
+                    // }
+            }
+        }
+    }
+    const pressSkill2 = () => {
+        if(turn == myTurn){
+            const skill = pressSkill(1);
+            const skillName = skill[0];
+            const skillType = skill[1];
+            const skillDamage = skill[2];
+            const skillTarget = skill[3];
+        }
+    }
+    const pressSkill3 = () => {
+        if(turn == myTurn){
+            const skill = pressSkill(2);
+            const skillName = skill[0];
+            const skillType = skill[1];
+            const skillDamage = skill[2];
+            const skillTarget = skill[3];
+        }
+    }
+    const pressSkill4 = () => {
+        if(turn == myTurn){
+            const skill = pressSkill(3);
+            const skillName = skill[0];
+            const skillType = skill[1];
+            const skillDamage = skill[2];
+            const skillTarget = skill[3];
+        }
+    }
 
     return (
         <View style={styles.container}>
             <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
                 <View style={{flex: 0.2, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>    
                     <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
-                    <Text style={{}}>{route.params.roomCode}</Text>
+                    <Text style={{}}>{roomCode}</Text>
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
                     {users.length==2
                     && <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> {500*0.5}/{500} </Text>
+                        <Text style={styles.buttonText}> {player2_hp}/{maxHp} </Text>
                         </TouchableOpacity> }
                     {users.length==2
                     && <Image
@@ -123,27 +250,27 @@ function BattleScreen({ route, navigation }) {
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
                     <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
                     <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> {pokemon.health}/{pokemon.health} </Text>
+                        <Text style={styles.buttonText}> {player1_hp}/{maxHp} </Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
 
             <View style={styles.interface}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>{pokemon.skills[0]}</Text>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill1}>
+                        <Text style={styles.buttonText}>{skill1}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>{pokemon.skills[1]}</Text>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill2}>
+                        <Text style={styles.buttonText}>{skill2}</Text>
                     </TouchableOpacity> 
                 </View>
                 
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>{pokemon.skills[2]}</Text>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill3}>
+                        <Text style={styles.buttonText}>{skill3}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>{pokemon.skills[3]}</Text>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill4}>
+                        <Text style={styles.buttonText}>{skill4}</Text>
                     </TouchableOpacity> 
                 </View>
             </View>
