@@ -103,8 +103,9 @@ function BattleScreen({ route, navigation }) {
         <View style={styles.container}>
             <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
                 <View style={{flex: 0.1, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>
-                    <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
-                    <Text style={{}}>{route.params.roomCode}</Text>
+                    {roomFull &&
+                    && <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
+                    <Text style={{}}>{route.params.roomCode}</Text>}
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
                     <TouchableOpacity style={styles.hpbar}>
