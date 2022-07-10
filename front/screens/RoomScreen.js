@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput} from 'react-native';
+import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput,Alert} from 'react-native';
 import React, { useState } from 'react';
 import randomCodeGenerator from '../utils/randomCodeGenerator';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,14 +9,33 @@ const SOCKET_URL ='http://192.249.18.107:443';
 
 function RoomScreen({ route, navigation }) {
     const [roomCode, setRoomCode] = useState('');
+    const [roomCodeValid, setRoomCodeValid] = useState(false);
     
     const socket = io.connect(SOCKET_URL, {
       transports: ['websocket'],
       reconnectionAttempts: 15 //Nombre de fois qu'il doit réessayer de se connecter
     });
-    
+
+    const roomCodeHandler = (text) =>{
+        if(text.length != 6 || isNaN(text)){
+            setRoomCodeValid(false);
+        }
+        else{
+            setRoomCodeValid(true);
+            setRoomCode(text);
+        }
+    }
     const moveToSelect = () =>{
         navigation.navigate('Select',{roomCode: makeid()});
+    }
+    const joinToSelect = () =>{
+        if(roomCodeValid){
+            navigation.navigate('Select',{roomCode: roomCode});
+        }else{
+            Alert.alert(
+                "Invalid Room Code!"
+            )
+        }
     }
 
     socket.emit("chatting", "from front");
@@ -32,9 +51,9 @@ function RoomScreen({ route, navigation }) {
                 </View>
             </View>
             <View style={{flex: 4, alignItems: 'flex-end',marginBottom:30,marginRight:10}}>
-                <TextInput style={styles.input} placeholder = "Game Code" onChange={(event) => setRoomCode(event.target.value)}></TextInput>
+                <TextInput style={styles.input} placeholder = "Game Code" onChangeText={(text) => roomCodeHandler(text)}></TextInput>
                 
-                <TouchableOpacity style={styles.buttonAlt}>
+                <TouchableOpacity style={styles.buttonAlt} onPress={joinToSelect}>
                     <Text style={styles.buttonAltText}>JOIN GAME</Text>
                 </TouchableOpacity>
                 
