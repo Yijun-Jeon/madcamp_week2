@@ -3,17 +3,17 @@ import * as React from 'react';
 
 function SelectScreen({route, navigation}){
 
-    const roomCode = route.params.roomCode;
+    // const roomCode = route.params.roomCode;
 
     const moveToBattle = () =>{
-        navigation.navigate('Battle')
+        navigation.navigate('Battle',{roomCode: route.params.roomCode})
     }
 
     return(
         <ImageBackground source={require('../public/images/select.jpg')} style={styles.image}>
-            <View style={{flex: 0.2, alignItems:'center', justifyContent:'flex-end',marginTop:50}}>
-                <Text style={{}}>Room Code</Text>
-                <Text style={{}}>{roomCode}</Text>
+            <View style={{flex: 0.2,marginLeft:'10%', alignItems:'flex-start', justifyContent:'flex-end',marginTop:50}}>
+                <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
+                <Text style={{}}>{route.params.roomCode}</Text>
             </View>
             <View style={{flex: 5}}>
                 <View style={styles.card}>
@@ -49,8 +49,8 @@ function SelectScreen({route, navigation}){
                         <Image source={require('../public/images/myu.gif')}></Image>
                     </TouchableOpacity>
                 </View>
-                <View style={{flex: 1.3}}>
-                    <TouchableOpacity style={{ width: '50%',borderWidth: 2,marginLeft:60,borderRadius:50, height: 40,backgroundColor:'yellow', borderColor: 'red',justifyContent: 'center',alignItems: 'center',marginVertical: 5}} onPress={moveToBattle}>
+                <View style={{flex: 1.3,alignItems:'center'}}>
+                    <TouchableOpacity style={{ width: '30%',marginTop:10, borderWidth: 2,borderRadius:50, height: 40,backgroundColor:'yellow', borderColor: 'red',justifyContent: 'center',alignItems: 'center',mcalarginVerti: 5}} onPress={moveToBattle}>
                         <Text style={styles.buttonAltText}>OK</Text>
                     </TouchableOpacity>
                 </View>
@@ -63,14 +63,15 @@ const styles = StyleSheet.create({
     image: {
         flex: 1,
         width: '100%',
-        alignItems:'center',
     },  
     card: {
         flex: 1,
         flexDirection: 'row',
         backgroundColor: 'rgba(71, 255, 136, 0.3)',
-        marginBottom:'10%',
+        marginTop: '10%',
+        marginBottom:'20%',
         borderRadius: 20,
+        marginLeft:'12%',
         width: 300,
         justifyContent:'center',
         alignContent: 'center',
@@ -107,11 +108,10 @@ const styles = StyleSheet.create({
     images:{
         flex: 1, 
         flexDirection:'row',
-        justifyContent:'space-between', 
+        justifyContent:'space-evenly', 
         alignItems:'baseline'
     },
     buttonOk:{
-        width: '50%',
         borderWidth: 2,
         marginLeft:60,
         marginTop:30,

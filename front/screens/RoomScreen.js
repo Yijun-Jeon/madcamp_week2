@@ -16,23 +16,22 @@ function RoomScreen({ route, navigation }) {
     });
     
     const moveToSelect = () =>{
-        setRoomCode(makeid());
-        navigation.navigate('Select',{roomCode: roomCode});
+        navigation.navigate('Select',{roomCode: makeid()});
     }
 
     socket.emit("chatting", "from front");
 
     return (
         <ImageBackground source={require('../public/images/roomback.png')} style={styles.image}>
-            <View style={{flex: 1}}>
+            <View style={{flex: 2}}>
             </View>
             <View style={{flex: 10}}>
                 <View style={styles.card}>
                     <Text style={styles.heading}>User Name:</Text>
-                    <Text style={styles.heading}>{route.params.userName}</Text>
+                    <Text style={[styles.heading,{color:'black'}]}>{route.params.userName}</Text>
                 </View>
             </View>
-            <View style={{flex: 4, alignItems: 'flex-end'}}>
+            <View style={{flex: 4, alignItems: 'flex-end',marginBottom:30,marginRight:10}}>
                 <TextInput style={styles.input} placeholder = "Game Code" onChange={(event) => setRoomCode(event.target.value)}></TextInput>
                 
                 <TouchableOpacity style={styles.buttonAlt}>
@@ -58,20 +57,20 @@ function RoomScreen({ route, navigation }) {
     },  
     card: {
         flex: 1,
-        backgroundColor: 'rgba(255, 255, 255, 0.4)',
-        width: '40%',
-        marginTop: '15%',
+        backgroundColor: 'rgba(255, 255, 255, 0.6)',
         borderRadius: 20,
-        maxHeight: 150,
-        paddingBottom: '30%',
-        marginLeft: 30,
+        width: '40%',
+        maxHeight: 70,
+        justifyContent:'flex-start',
+        alignItems: 'center',
+        marginLeft: 20,
     },
     heading: {
         fontSize: 20,
         fontWeight: 'bold',
         marginLeft: '10%',
         marginTop: '5%',
-        color: 'black',
+        color:'blue',
     },
     form: {
         flex: 1,

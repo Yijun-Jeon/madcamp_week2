@@ -104,11 +104,11 @@ function AuthScreen({navigation}) {
                         <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
                             <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
                         </TouchableOpacity>
-                        {isLogin && <TouchableOpacity style={styles.buttonAltKakao} onPress={onChangeHandler}>
+                        {isLogin && <TouchableOpacity style={styles.buttonAltKakao}>
                             <Image source={require('../public/images/kakao.png')} style={styles.buttonImage}></Image>
                             <Text style={styles.buttonAltTextKG}>Kakao 로그인</Text>
                         </TouchableOpacity>}
-                        {isLogin && <TouchableOpacity style={styles.buttonAltGoogle} onPress={onChangeHandler}>
+                        {isLogin && <TouchableOpacity style={styles.buttonAltGoogle}>
                         <Image source={require('../public/images/google.png')} style={styles.buttonImage}></Image>
                             <Text style={styles.buttonAltTextKG}>Google 로그인</Text>
                         </TouchableOpacity>}
