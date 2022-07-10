@@ -1,12 +1,33 @@
 import { View, Text,TouchableOpacity, StyleSheet,ImageBackground,Image} from 'react-native';
-import * as React from 'react';
+import React, { useState } from 'react';
+import {Pokemon,pokemons} from '../utils/character/Pokemon';
 
 function SelectScreen({route, navigation}){
 
-    // const roomCode = route.params.roomCode;
+    const [pokemon,setPokemon] = useState(pokemons[0]);
+    
+    const selectPikachu = () =>{
+        setPokemon(pokemons[0]);
+    }
 
+    const selectPaili = () =>{
+        setPokemon(pokemons[1]);
+    }
+
+    const selectKkobugi = () =>{
+        setPokemon(pokemons[2]);
+    }
+
+    const selectIsanghaessi = () =>{
+        setPokemon(pokemons[3]);
+    }
+
+    const selectMyu = () =>{
+        setPokemon(pokemons[4]);
+    }
+    
     const moveToBattle = () =>{
-        navigation.navigate('Battle',{roomCode: route.params.roomCode})
+        navigation.navigate('Battle',{roomCode: route.params.roomCode ,  pokemon: pokemon})
     }
 
     return(
@@ -33,20 +54,20 @@ function SelectScreen({route, navigation}){
             </View>
             <View style={{flex: 4}}>
                 <View style={styles.images}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={selectPikachu}>
                         <Image source={require('../public/images/pikachu.gif')}></Image>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Image source={require('../public/images/paili.gif')}></Image>
+                    <TouchableOpacity onPress={selectPaili}>
+                        <Image source={require('../public/images/paili.gif')} ></Image>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Image source={require('../public/images/kkobugi.gif')}></Image>
+                    <TouchableOpacity onPress={selectKkobugi}>
+                        <Image source={require('../public/images/kkobugi.gif')} ></Image>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Image source={require('../public/images/isanghaessi.gif')}></Image>
+                    <TouchableOpacity onPress={selectIsanghaessi}>
+                        <Image source={require('../public/images/isanghaessi.gif')} ></Image>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Image source={require('../public/images/myu.gif')}></Image>
+                    <TouchableOpacity onPress={selectMyu}>
+                        <Image source={require('../public/images/myu.gif')} ></Image>
                     </TouchableOpacity>
                 </View>
                 <View style={{flex: 1.3,alignItems:'center'}}>

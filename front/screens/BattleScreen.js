@@ -11,14 +11,12 @@ function BattleScreen({ route, navigation }) {
     });
 
     const roomCode = route.params.roomCode;
-
-    const [Pokemon, setPokemon] = useState(0)
-    const skill1 = '몸통박치기';
-    const skill2 = '전광석화';
-    const skill3 = '10만볼트';
-    const skill4 = '번개';
-
-
+    const [pokemon, setPokemon] = useState(route.params.pokemon);
+    const skill1 = pokemon.skills[0];
+    const skill2 = pokemon.skills[1];
+    const skill3 = pokemon.skills[2];
+    const skill4 = pokemon.skills[3];
+    
     socket.emit("chatting", "from front");
 
     return (
