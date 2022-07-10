@@ -1,7 +1,5 @@
 import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput,Alert} from 'react-native';
-import React, { useState } from 'react';
-import randomCodeGenerator from '../utils/randomCodeGenerator';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import {makeid} from '../utils/randomCodeGenerator';
 
