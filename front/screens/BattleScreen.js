@@ -4,18 +4,27 @@ import io from 'socket.io-client';
 import {Pokemon, pokemons} from '..//utils/character/Pokemon'
 
 const SOCKET_URL ='http://192.249.18.107:443';
+const blank_path = '../public/images/blank.png'
 let socket
 function BattleScreen({ route, navigation }) {
     const roomCode = route.params.roomCode;
-    const [pokemon, setPokemon] = useState(route.params.pokemon);
-    const pokemon_idx = route.params.pokemon_idx
-    const username = route.params.username
+    const pokemon = route.params.pokemon;
+    const username = route.params.username;
 
     //initialize socket state
     const [room, setRoom] = useState(roomCode)
     const [roomFull, setRoomFull] = useState(false)
     const [users, setUsers] = useState([])
     const [currentUser, setCurrentUser] = useState('')
+    
+    //initialize game state
+    const [gameOver, setGameOver] = useState(true)
+    const [winner, setWinner] = useState('')
+    const [turn, setTurn] = useState('')
+    const [player1_hp, setPlayer1Hp] = useState([])
+    const [player2_hp, setPlayer2Hp] = useState([])
+    const [player1_pokemon, setPlayer1Pokemon] = useState([])
+    const [player2_pokemon, setPlayer2Pokemon] = useState([])
 
     useEffect(() => {
         const connectionOptions =  {
@@ -39,30 +48,12 @@ function BattleScreen({ route, navigation }) {
         }
     }, [])
 
-    //initialize game state
-    const [gameOver, setGameOver] = useState(true)
-    const [winner, setWinner] = useState('')
-    const [turn, setTurn] = useState('')
-    const [player1_hp, setPlayer1Hp] = useState([])
-    const [player2_hp, setPlayer2Hp] = useState([])
-    const [player1_pokemon, setPlayer1Pokemon] = useState([])
-    const [player2_pokemon, setPlayer2Pokemon] = useState([])
-   
 
-    //runs once on component mount
-    useEffect(() => {
-        //send initial state to server
-        socket.emit('initGameState', {
-            gameOver: false,
-            turn: 'Player 1',
-            player1_hp: 500,
-            player2_hp: 500,
-        })
-    }, [])
-
+    
 
     useEffect(() => {
         socket.on('initGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
+            console.log("client initGameState called")
             setGameOver(gameOver)
             setTurn(turn)
             setPlayer1Hp(player1_hp)
@@ -71,52 +62,60 @@ function BattleScreen({ route, navigation }) {
             setPlayer2Pokemon(player2_pokemon)
         })
 
-        socket.on('updateGameState', ({ gameOver, winner, turn, player1_hp, player2_hp, currentColor, currentNumber, playedCardsPile, drawCardPile }) => {
+        socket.on('updateGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
+            console.log("client updateGame called")
             gameOver && setGameOver(gameOver)
-            gameOver===true && playGameOverSound()
-            winner && setWinner(winner)
             turn && setTurn(turn)
-            player1Deck && setPlayer1Deck(player1Deck)
-            player2Deck && setPlayer2Deck(player2Deck)
-            currentColor && setCurrentColor(currentColor)
-            currentNumber && setCurrentNumber(currentNumber)
-            playedCardsPile && setPlayedCardsPile(playedCardsPile)
-            drawCardPile && setDrawCardPile(drawCardPile)
-            setUnoButtonPressed(false)
+            player1_hp && setPlayer1Hp(player1_hp)
+            player2_hp && setPlayer2Hp(player2_hp)
+            player1_pokemon && setPlayer1Pokemon(player1_pokemon)
+            player2_pokemon && setPlayer2Pokemon(player2_pokemon)
         })
 
         socket.on("roomData", ({ users }) => {
+            console.log("client roomData called")
             setUsers(users)
+        })
+        
+        socket.on('updatepokemon', ({update_pokemon}) => {
+            console.log("update_pokemon")
+            if(player1_pokemon) setPlayer2Pokemon(update_pokemon)
+            if(player2_pokemon) setPlayer1Pokemon(update_pokemon)
         })
 
         socket.on('currentUserData', ({ name }) => {
+            console.log("client currentUserData called")
             setCurrentUser(name)
-            console.log(name)
         })
     }, [])
 
-    const skill1 = pokemon.skills[0];
-    const skill2 = pokemon.skills[1];
-    const skill3 = pokemon.skills[2];
-    const skill4 = pokemon.skills[3];
+    //runs once on component mount
+    useEffect(() => {
+        //send initial state to server
+        console.log("current User : "+currentUser)
+       
+        socket.emit('updatepokemon', {
+            pokemon,
+        })
+    }, [currentUser])
 
     return (
         <View style={styles.container}>
             <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
-                <View style={{flex: 0.2, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>
+                <View style={{flex: 0.1, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>
                     <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
                     <Text style={{}}>{route.params.roomCode}</Text>
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
                     <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> 100/100 </Text>
+                        <Text style={styles.buttonText}> {500*0.5}/{500} </Text>
                     </TouchableOpacity>
-                    <Image style={styles.characterImage} source={pokemon.imgbattlefront}/>
+                    <Image style={styles.characterImage} source={player2_pokemon?player2_pokemon.imgbattlefront:blank_path}/>
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
                     <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
                     <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> 100/100 </Text>
+                        <Text style={styles.buttonText}> {500*0.7}/{500} </Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -124,19 +123,19 @@ function BattleScreen({ route, navigation }) {
             <View style={styles.interface}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>{skill1}</Text>
+                        <Text style={styles.buttonText}>{pokemon.skills[0]}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>{skill2}</Text>
+                        <Text style={styles.buttonText}>{pokemon.skills[1]}</Text>
                     </TouchableOpacity> 
                 </View>
                 
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>{skill3}</Text>
+                        <Text style={styles.buttonText}>{pokemon.skills[2]}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>{skill4}</Text>
+                        <Text style={styles.buttonText}>{pokemon.skills[3]}</Text>
                     </TouchableOpacity> 
                 </View>
             </View>

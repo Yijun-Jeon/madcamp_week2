@@ -47,6 +47,7 @@ function App() {
     require('./public/images/pikachu_battle.gif'),
     require('./public/images/pikachu_battle_back.gif'),
     require('./public/images/select.jpg'),
+    require('./public/images/blank.png')
   ]);
 
   if(!imagesLoaded){
