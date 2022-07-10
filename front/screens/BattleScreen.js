@@ -17,15 +17,6 @@ function BattleScreen({ route, navigation }) {
     const [users, setUsers] = useState([])
     const [currentUser, setCurrentUser] = useState('')
     
-    //initialize game state
-    const [gameOver, setGameOver] = useState(true)
-    const [winner, setWinner] = useState('')
-    const [turn, setTurn] = useState('')
-    const [player1_hp, setPlayer1Hp] = useState([])
-    const [player2_hp, setPlayer2Hp] = useState([])
-    const [player1_pokemon, setPlayer1Pokemon] = useState([])
-    const [player2_pokemon, setPlayer2Pokemon] = useState([])
-
     useEffect(() => {
         const connectionOptions =  {
             "forceNew" : true,
@@ -35,7 +26,7 @@ function BattleScreen({ route, navigation }) {
         }
         socket = io.connect(SOCKET_URL, connectionOptions)
 
-        socket.emit('join', {room: room}, (error) => {
+        socket.emit('join', {room: room, pokemon: pokemon}, (error) => {
             if(error)
                 setRoomFull(true)
         })
@@ -48,75 +39,91 @@ function BattleScreen({ route, navigation }) {
         }
     }, [])
 
+    //initialize game state
+    const [gameOver, setGameOver] = useState(true)
+    const [winner, setWinner] = useState('')
+    const [turn, setTurn] = useState('')
+    const [player1_hp, setPlayer1Hp] = useState([])
+    const [player2_hp, setPlayer2Hp] = useState([])
+    const [player1_pokemon, setPlayer1Pokemon] = useState([pokemon])
+    const [player2_pokemon, setPlayer2Pokemon] = useState([])
 
-    
 
     useEffect(() => {
-        socket.on('initGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
-            console.log("client initGameState called")
-            setGameOver(gameOver)
-            setTurn(turn)
-            setPlayer1Hp(player1_hp)
-            setPlayer2Hp(player2_hp)
-            setPlayer1Pokemon(player1_pokemon)
-            setPlayer2Pokemon(player2_pokemon)
-        })
-
-        socket.on('updateGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
-            console.log("client updateGame called")
-            gameOver && setGameOver(gameOver)
-            turn && setTurn(turn)
-            player1_hp && setPlayer1Hp(player1_hp)
-            player2_hp && setPlayer2Hp(player2_hp)
-            player1_pokemon && setPlayer1Pokemon(player1_pokemon)
-            player2_pokemon && setPlayer2Pokemon(player2_pokemon)
-        })
-
         socket.on("roomData", ({ users }) => {
-            console.log("client roomData called")
             setUsers(users)
+            if(users.length==2){
+                //console.log("pokemon setting..."+users[0].pokemon.name+users[1].pokemon.name)
+                setPlayer1Pokemon(users[0].pokemon)
+                setPlayer2Pokemon(users[1].pokemon)
+            }
         })
         
-        socket.on('updatepokemon', ({update_pokemon}) => {
-            console.log("update_pokemon")
-            if(player1_pokemon) setPlayer2Pokemon(update_pokemon)
-            if(player2_pokemon) setPlayer1Pokemon(update_pokemon)
-        })
-
-        socket.on('currentUserData', ({ name }) => {
-            console.log("client currentUserData called")
+        socket.on('currentUserData', ({ name}) => {
+            console.log("client currentUserData called: "+name)
             setCurrentUser(name)
         })
     }, [])
+    
+
+    // useEffect(()=>{
+    //     socket.emit('initGameState',{
+    //         gameOver: false,
+    //         turn: 'Player 1',
+    //         player1_hp: 500,
+    //         player2_hp: 500,
+    //         player1_pokemon: player1_pokemon,
+    //         player2_pokemon: player2_pokemon,
+    //     })
+    // },[])
+
+
+    // useEffect(() => {
+    //     socket.on('initGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
+    //         console.log("client initGameState called")
+    //         setGameOver(gameOver)
+    //         setTurn(turn)
+    //         setPlayer1Hp(player1_hp)
+    //         setPlayer2Hp(player2_hp)
+    //         setPlayer1Pokemon(player1_pokemon)
+    //         setPlayer2Pokemon(player2_pokemon)
+    //     })
+
+    //     socket.on('updateGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
+    //         console.log("client updateGame called")
+    //         gameOver && setGameOver(gameOver)
+    //         turn && setTurn(turn)
+    //         player1_hp && setPlayer1Hp(player1_hp)
+    //         player2_hp && setPlayer2Hp(player2_hp)
+    //         player1_pokemon && setPlayer1Pokemon(player1_pokemon)
+    //         player2_pokemon && setPlayer2Pokemon(player2_pokemon)
+    //     })
+    // }, [])
 
     //runs once on component mount
-    useEffect(() => {
-        //send initial state to server
-        console.log("current User : "+currentUser)
-       
-        socket.emit('updatepokemon', {
-            pokemon,
-        })
-    }, [currentUser])
+    
 
     return (
         <View style={styles.container}>
             <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
-                <View style={{flex: 0.1, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>
-                    {roomFull &&
-                    && <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
-                    <Text style={{}}>{route.params.roomCode}</Text>}
+                <View style={{flex: 0.2, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>    
+                    <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
+                    <Text style={{}}>{route.params.roomCode}</Text>
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
-                    <TouchableOpacity style={styles.hpbar}>
+                    {users.length==2
+                    && <TouchableOpacity style={styles.hpbar}>
                         <Text style={styles.buttonText}> {500*0.5}/{500} </Text>
-                    </TouchableOpacity>
-                    <Image style={styles.characterImage} source={player2_pokemon?player2_pokemon.imgbattlefront:blank_path}/>
+                        </TouchableOpacity> }
+                    {users.length==2
+                    && <Image
+                            style={styles.characterImage}
+                            source={currentUser=='Player 1'?player2_pokemon.imgbattlefront:player1_pokemon.imgbattlefront}/>}
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
                     <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
                     <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> {500*0.7}/{500} </Text>
+                        <Text style={styles.buttonText}> {pokemon.health}/{pokemon.health} </Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>

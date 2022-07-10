@@ -1,7 +1,8 @@
 class Pokemon{
-    constructor(name,type,imgfront,imgback,imgbattlefront,imgbattleback,skills){
+    constructor(name,type,health,imgfront,imgback,imgbattlefront,imgbattleback,skills){
         this.name = name;
         this.type = type;
+		this.health = health;
         this.imgfront = imgfront;
         this.imgback = imgback;
         this.imgbattlefront = imgbattlefront;
@@ -56,23 +57,23 @@ class Pokemon{
 }
 
 const pokemons = [];
-pokemons.push(new Pokemon('피카츄','전기',require('../../public/images/pikachu.gif'),require('../../public/images/pikachu_back.gif')
+pokemons.push(new Pokemon('피카츄','전기',500,require('../../public/images/pikachu.gif'),require('../../public/images/pikachu_back.gif')
             ,require('../../public/images/pikachu_battle.gif'),require('../../public/images/pikachu_battle_back.gif')
             ,['몸통박치기','10만 볼트','100만 볼트','꼬리 흔들기']))
   
-pokemons.push(new Pokemon('파이리','불꽃',require('../../public/images/paili.gif'),require('../../public/images/paili_back.gif')
+pokemons.push(new Pokemon('파이리','불꽃',400,require('../../public/images/paili.gif'),require('../../public/images/paili_back.gif')
 ,require('../../public/images/paili_battle.gif'),require('../../public/images/paili_battle_back.gif')
 ,['몸통박치기','울음소리','화염방사','불대문자']))
 
-pokemons.push(new Pokemon('꼬부기','물',require('../../public/images/kkobugi.gif'),require('../../public/images/kkobugi_back.gif')
+pokemons.push(new Pokemon('꼬부기','물',500,require('../../public/images/kkobugi.gif'),require('../../public/images/kkobugi_back.gif')
 ,require('../../public/images/kkobugi_battle.gif'),require('../../public/images/kkobugi_battle_back.gif')
 ,['몸통박치기','물대포','아쿠아테일','하이드로펌프']))
 
-pokemons.push(new Pokemon('이상해씨','풀',require('../../public/images/isanghaessi.gif'),require('../../public/images/isanghaessi_back.gif')
+pokemons.push(new Pokemon('이상해씨','풀',400,require('../../public/images/isanghaessi.gif'),require('../../public/images/isanghaessi_back.gif')
 ,require('../../public/images/isanghaessi_battle.gif'),require('../../public/images/isanghaessi_battle_back.gif')
 ,['몸통박치기','꼬리흔들기','매지컬리프','지진']))
 
-pokemons.push(new Pokemon('뮤','에스퍼',require('../../public/images/myu.gif'),require('../../public/images/myu_back.gif')
+pokemons.push(new Pokemon('뮤','에스퍼',500,require('../../public/images/myu.gif'),require('../../public/images/myu_back.gif')
 ,require('../../public/images/myu_battle.gif'),require('../../public/images/myu_battle_back.gif')
 ,['몸통박치기','사이코키네시스','빛의 장막','수면']))
 
