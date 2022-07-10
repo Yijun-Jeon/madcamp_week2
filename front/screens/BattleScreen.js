@@ -28,13 +28,13 @@ function BattleScreen({ route, navigation }) {
     const [player1_pokemon, setPlayer1Pokemon] = useState([])
     const [player2_pokemon, setPlayer2Pokemon] = useState([])
 
-    const [myTurn, setMyTurn] = useState('')
+    const [myTurn, setMyTurn] = useState(1)
     const [start, setStart] = useState(false);
 
-    const skill1 = pokemon.skills[0];
-    const skill2 = pokemon.skills[1];
-    const skill3 = pokemon.skills[2];
-    const skill4 = pokemon.skills[3];
+    const skill1 = pokemon.skills[0].name;
+    const skill2 = pokemon.skills[1].name;
+    const skill3 = pokemon.skills[2].name;
+    const skill4 = pokemon.skills[3].name;
 
     // 화면 첫 실행, 새로고침
     useEffect(() =>{
@@ -43,26 +43,26 @@ function BattleScreen({ route, navigation }) {
         setPlayer1Hp(500);
         setPlayer2Hp(500);
 
-        socket.emit('join',{
-            room: roomCode,
-        });
+        // socket.emit('join',{
+        //     room: roomCode,
+        // });
 
-        socket.on('getMyTurn',({myTurn}) =>{
-            setMyTurn(myTurn);
-            if(myTurn == 2){
-                setStart(true);
-            }
-        })
+        // socket.on('getMyTurn',({myTurn}) =>{
+        //     setMyTurn(myTurn);
+        //     if(myTurn == 2){
+        //         setStart(true);
+        //     }
+        // })
 
     },[])
 
     useEffect(()=>{
-        socket.emit('sendMyPokemon',{
-            myPokemon: pokemon,
-        })
-        socket.on("getPokemonEnemy",({pokemonEnemy}) =>{
-            setPokemonEnemy(pokemonEnemy);
-        })
+        // socket.emit('sendMyPokemon',{
+        //     myPokemon: pokemon,
+        // })
+        // socket.on("getPokemonEnemy",({pokemonEnemy}) =>{
+        //     setPokemonEnemy(pokemonEnemy);
+        // })
     },[start])
 
     useEffect(() => {
@@ -75,9 +75,9 @@ function BattleScreen({ route, navigation }) {
         }
         
         // turn 소켓 받는 함수 넣고
-        socket.on('receiveTurn', ({turn}) => {
-            setTurn(turn)
-        });
+        // socket.on('receiveTurn', ({turn}) => {
+        //     setTurn(turn)
+        // });
     },)
 
     useEffect(() =>{
@@ -88,18 +88,72 @@ function BattleScreen({ route, navigation }) {
         if(gameOver){
             console.log('over');
             console.log(winner);
-            navigation.navigate("Login");
+            navigation.navigate("End");
         }
     },[gameOver])
 
-    const pressSkill = () => {
+    function pressSkill(idx){
+        return [pokemon.skills[idx].name,
+                 pokemon.skills[idx].type,
+                 pokemon.skills[idx].damage,
+                 pokemon.skills[idx].target];        
+    }
+    function checkDead(hp,damage){
+        if(hp - damage <= 0)
+            return 0;
+        else
+            return hp - damage;
+    }
+    function ckeckBuff(hp,buff){
+        if(hp + buff >= maxHp)
+            return maxHp;
+        else
+            return hp + buff;
+    }
+    const pressSkill1 = () => {
         if(turn == myTurn){
-            const damage = 100;
-            setPlayer2Hp(player2_hp - damage < 0 ? 0 : player2_hp-damage);
-            //setTurn(turn == 1 ? 2 : 1);
-            socket.emit("changeTurn",{
-                turn : turn,
-            });
+            const skill = pressSkill(0);
+            const skillName = skill[0];
+            const skillType = skill[1];
+            const skillDamage = skill[2];
+            const skillTarget = skill[3];
+
+            switch(skillType){
+                case '공격':
+                    setPlayer2Hp(checkDead(player2_hp,skillDamage));
+                    break;
+                case '버프':
+                    // if(skillTarget == 'self'){
+                    //     set
+                    // }
+            }
+        }
+    }
+    const pressSkill2 = () => {
+        if(turn == myTurn){
+            const skill = pressSkill(1);
+            const skillName = skill[0];
+            const skillType = skill[1];
+            const skillDamage = skill[2];
+            const skillTarget = skill[3];
+        }
+    }
+    const pressSkill3 = () => {
+        if(turn == myTurn){
+            const skill = pressSkill(2);
+            const skillName = skill[0];
+            const skillType = skill[1];
+            const skillDamage = skill[2];
+            const skillTarget = skill[3];
+        }
+    }
+    const pressSkill4 = () => {
+        if(turn == myTurn){
+            const skill = pressSkill(3);
+            const skillName = skill[0];
+            const skillType = skill[1];
+            const skillDamage = skill[2];
+            const skillTarget = skill[3];
         }
     }
 
@@ -126,19 +180,19 @@ function BattleScreen({ route, navigation }) {
 
             <View style={styles.interface}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button} onPress={pressSkill}>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill1}>
                         <Text style={styles.buttonText}>{skill1}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button}  onPress={pressSkill2}>
                         <Text style={styles.buttonText}>{skill2}</Text>
                     </TouchableOpacity> 
                 </View>
                 
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button}  onPress={pressSkill3}>
                         <Text style={styles.buttonText}>{skill3}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill4}>
                         <Text style={styles.buttonText}>{skill4}</Text>
                     </TouchableOpacity> 
                 </View>

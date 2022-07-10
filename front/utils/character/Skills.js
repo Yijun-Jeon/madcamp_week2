@@ -1,117 +1,98 @@
-let moves = {
-    'tackle': {
-        name: 'TACKLE',
+let skills = {
+    '몸통박치기': {
+        name: '몸통박치기',
+		type: '공격',
         damage: 15,
         target: 'enemy'
     },
-    'thundershock': {
-        name: 'THUNDERSHOCK',
+    '10만 볼트': {
+        name: '10만 볼트',
+		type: '공격',
         damage: 25,
         target: 'enemy'
 	},
-	'scratch': {
-		name: 'SCRATCH',
-		damage: 4,
+	'100만 볼트': {
+		name: '100만 볼트',
+		type: '공격',
+		damage: 50,
 		target: 'enemy'
 	},
-	'ember': {
-		name: 'EMBER',
-		damage: 6,
+	'꼬리 흔들기': {
+		name: '꼬리 흔들기',
+		type: '버프',
+		damage: 0,
+		debuff: 100,
 		target: 'enemy'
 	},
-	'quick attack': {
-		name: 'QUICK ATTACK',
-		damage: 20,
+	'울음소리': {
+		name: '울음소리',
+		type: '버프',
+		damage: 0,
+		debuff: 100,
 		target: 'enemy'
 	},
-	'thunder': {
-		name: 'THUNDER',
-		damage: 40,
+	'화염방사': {
+		name: '화염방사',
+		type: '공격',
+		damage: 50,
 		target: 'enemy'
 	},
-	'fire blast': {
-		name: 'FIRE BLAST',
-		damage: 60,
+	'불대문자': {
+		name: '불대문자',
+		type: '공격',
+		damage: 100,
 		target: 'enemy'
 	},
-	'mega punch': {
-		name: 'MEGA PUNCH',
-		damage: 35,
+	'물대포': {
+		name: '물대포',
+		type: '공격',
+		damage: 30,
 		target: 'enemy'
 	},
-	'hydro pump': {
-		name: 'HYDRO PUMP',
-		damage: 60,
+	'아쿠아테일': {
+		name: '아쿠아테일',
+		type: '공격',
+		damage: 50,
 		target: 'enemy'
 	},
-	'skull bash': {
-		name: 'SKULL BASH',
-		damage: 35,
+	'하이드로펌프': {
+		name: '하이드로펌프',
+		type: '공격',
+		damage: 100,
 		target: 'enemy'
 	},
-	'acid': {
-		name: 'ACID',
-		damage: 28,
+	'매지컬리프': {
+		name: '매지컬리프',
+		type: '공격',
+		damage: 50,
 		target: 'enemy'
 	},
-	'belch': {
-		name: 'BELCH',
-		damage: 60,
+	'지진': {
+		name: '지진',
+		type: '공격',
+		damage: 100,
 		target: 'enemy'
 	},
-	'psychic': {
-		name: 'PSYCHIC',
-		damage: 40,
+	'사이코키네시스': {
+		name: '사이코키네시스',
+		type: '공격',
+		damage: 50,
 		target: 'enemy'
 	},
-	'rest': {
-		name: 'REST',
-		damage: -.6,
+	'빛의 장막': {
+		name: '빛의 장막',
+		type: '버프',
+		damage: 0,
+		buff: 100,
 		target: 'self'
 	},
-	'solar beam': {
-		name: 'SOLAR BEAM',
-		damage: 60,
-		target: 'enemy'
-	},
-	'body slam': {
-		name: 'BODY SLAM',
-		damage: 35,
-		target: 'enemy'
-	},
-	'slash': {
-		name: 'SLASH',
-		damage: 35,
-		target: 'enemy'
-	},
-	'hyper beam': {
-		name: 'HYPERBEAM',
-		damage: 70,
-		target: 'enemy'
-	},
-	'hi jump kick': {
-		name: 'HI JUMP KICK',
-		damage: 50,
-		target: 'enemy'
-	},
-	'mega kick': {
-		name: 'MEGA KICK',
-		damage: 60,
-		target: 'enemy'
-	},
-	'lick': {
-		name: 'LICK',
-		damage: 35,
-		target: 'enemy'
-	},
-	'low sweep': {
-		name: 'LOW SWEEP',
-		damage: 35,
-		target: 'enemy'
-	},
-	'dynamic punch': {
-		name: 'DYNAMIC PUNCH',
-		damage: 50,
-		target: 'enemy'
+	'수면': {
+		name: '수면',
+		type: '버프',
+		damage: 0,
+		buff: 100,
+		target: 'self'
 	}
 };
+
+export {skills};
