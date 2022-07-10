@@ -1,5 +1,5 @@
-import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Image,Button,ButtonGroup} from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Image,Button,ButtonGroup,ActivityIndicator} from 'react-native';
+import React, { useState, useEffect} from 'react';
 import io from 'socket.io-client';
 
 const SOCKET_URL ='http://192.249.18.107:443';
@@ -7,7 +7,7 @@ const SOCKET_URL ='http://192.249.18.107:443';
 function BattleScreen({ route, navigation }) {
     const socket = io.connect(SOCKET_URL, {
       transports: ['websocket'],
-      reconnectionAttempts: 15 //Nombre de fois qu'il doit réessayer de se connecter
+      reconnectionAttempts: 15 
     });
 
     const [Pokemon, setPokemon] = useState(0)
@@ -15,7 +15,6 @@ function BattleScreen({ route, navigation }) {
     const skill2 = '전광석화';
     const skill3 = '10만볼트';
     const skill4 = '번개';
-
 
     socket.emit("chatting", "from front");
 
@@ -56,9 +55,6 @@ function BattleScreen({ route, navigation }) {
                 </View>
             </View>
         </View>
-        // <ImageBackground source={require('../public/images/battleback.png')} style={styles.image} resizeMode='stretch'>
-
-        // </ImageBackground>
     );
   }
 

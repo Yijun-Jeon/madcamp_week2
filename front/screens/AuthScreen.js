@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
 
 // const API_URL = Platform.OS === 'ios' ? 'http://localhost:443' : 'http://10.0.2.2:443';
 const API_URL = 'http://192.249.18.107:443';
 
 function AuthScreen({navigation}) {
-
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
@@ -13,6 +12,15 @@ function AuthScreen({navigation}) {
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);
+    
+    const [loading, setLoading] = useState(false);
+
+    useEffect(()=>{
+        setLoading(true);
+        setTimeout(()=>{
+            setLoading(false)
+        },5000)
+    },[]);
 
     const onChangeHandler = () => {
         setIsLogin(!isLogin);
