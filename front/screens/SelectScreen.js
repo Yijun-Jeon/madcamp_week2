@@ -8,28 +8,59 @@ function SelectScreen({route, navigation}){
 
     const [pokemon,setPokemon] = useState(pokemons[0]);
     
+    const [name,setName] = useState('피카츄');
+    const [num,setNum] = useState('No. 025');
+    const [type,setType] = useState('전기');
+    const [killo, setKillo] = useState('6.0kg');
+    const [species,setSpecies] = useState('쥐 포켓몬');
+    
     const selectPikachu = () =>{
         setPokemon(pokemons[0]);
+        setName('피카츄');
+        setNum('No. 025');
+        setType('전기');
+        setKillo('6.0kg');
+        setSpecies('쥐 포켓몬');
     }
 
     const selectPaili = () =>{
         setPokemon(pokemons[1]);
+        setName('파이리');
+        setNum('No. 004');
+        setType('불꽃');
+        setKillo('8.5kg');
+        setSpecies('도롱뇽 포켓몬');
     }
 
     const selectKkobugi = () =>{
         setPokemon(pokemons[2]);
+        setName('꼬부기');
+        setNum('No. 007');
+        setType('물');
+        setKillo('9.0kg');
+        setSpecies('꼬마거북 포켓몬');
     }
 
     const selectIsanghaessi = () =>{
         setPokemon(pokemons[3]);
+        setName('이상해씨');
+        setNum('No. 001');
+        setType('풀 / 독');
+        setKillo('6.9kg');
+        setSpecies('씨앗 포켓몬');
     }
 
     const selectMyu = () =>{
         setPokemon(pokemons[4]);
+        setName('뮤');
+        setNum('No. 151');
+        setType('에스퍼');
+        setKillo('4.0kg');
+        setSpecies('신종 포켓몬');
     }
     
     const moveToBattle = () =>{
-        navigation.navigate('Battle',{roomCode: route.params.roomCode ,  pokemon: pokemon})
+        navigation.navigate('Battle',{roomCode: route.params.roomCode ,  pokemon: pokemon, userName: route.params.userName})
     }
 
 
@@ -42,16 +73,16 @@ function SelectScreen({route, navigation}){
             <View style={{flex: 5}}>
                 <View style={styles.card}>
                     <View style={{flex: 1, alignItems:'flex-end',justifyContent:'space-evenly'}}>
-                            <Text style={styles.heading}>이상해씨 :</Text>
+                            <Text style={styles.heading}>{name} :</Text>
                             <Text style={styles.heading}>타입 :</Text>
                             <Text style={styles.heading}>몸무게 :</Text>
                             <Text style={styles.heading}>분류 :</Text>
                     </View>
                     <View style={{flex: 1,alignItems:'center',justifyContent:'space-evenly'}}>
-                        <Text style={styles.explain}>No. 001</Text>
-                        <Text style={styles.explain}>풀 / 독</Text>
-                        <Text style={styles.explain}>6.9kg</Text>
-                        <Text style={styles.explain}>씨앗포켓몬</Text>
+                        <Text style={styles.explain}>{num}</Text>
+                        <Text style={styles.explain}>{type}</Text>
+                        <Text style={styles.explain}>{killo}</Text>
+                        <Text style={styles.explain}>{species}</Text>
                     </View>
                 </View>
             </View>

@@ -1,9 +1,23 @@
-import {View,Text} from 'react-native';
+import {View,Text,Image,TouchableOpacity} from 'react-native';
 
-function EndScreen(navigation){
+function EndScreen({route,navigation}){
+
+    const moveToRoom = () =>{
+        navigation.navigate("Room",{userName: route.params.userName});
+    }
+
     return(
         <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
-            <Text>loading</Text>
+            <View style={{marginBottom:0, flexDirection:'row'}}>
+                <Text style={{fontSize:80,}}>You</Text>
+                <Text style={{fontSize:80, marginLeft:30,color:'blue'}}>{route.params.isWin}</Text>
+            </View>
+            <Text style={{fontSize: 50, marginBottom:30}}>{route.params.userName}</Text>
+            <Image style={{}} source={route.params.img}></Image>
+
+            <TouchableOpacity style={{ width: '50%',marginTop:100, borderWidth: 2,borderRadius:50, height: 40,backgroundColor:'yellow', borderColor: 'red',justifyContent: 'center',alignItems: 'center'}}  onPress={moveToRoom}>
+                <Text style={{width: 50,height: 20,justifyContent: 'center',alignItems: 'center'}}>Restart</Text>
+            </TouchableOpacity>
         </View>
     );
 }

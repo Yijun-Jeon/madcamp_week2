@@ -1,5 +1,5 @@
 import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Image,Button,ButtonGroup,ActivityIndicator} from 'react-native';
-import React, { useState, useEffect, useInsertionEffect} from 'react';
+import React, { useState, useEffect} from 'react';
 import io from 'socket.io-client';
 import {Pokemon, pokemons} from '..//utils/character/Pokemon'
 
@@ -9,7 +9,7 @@ let socket
 function BattleScreen({ route, navigation }) {
     const roomCode = route.params.roomCode;
     const pokemon = route.params.pokemon;
-    const username = route.params.username;
+    const [userName,setUserName] = useState(route.params.userName);
 
     //initialize socket state
     const [room, setRoom] = useState(roomCode)
@@ -43,11 +43,14 @@ function BattleScreen({ route, navigation }) {
     const [gameOver, setGameOver] = useState(false)
     const [winner, setWinner] = useState('')
     const [turn, setTurn] = useState('1')
-    const [player1_hp, setPlayer1Hp] = useState(500)
+    const [player1_hp, setPlayer1Hp] = useState(300)
     const [player2_hp, setPlayer2Hp] = useState(500)
     const [player1_pokemon, setPlayer1Pokemon] = useState([pokemon])
     const [player2_pokemon, setPlayer2Pokemon] = useState([])
     const [maxHp,setMaxHp] = useState(500)
+
+    const [player1_defense, setPlayer1Defense] = useState(50);
+    const [player2_defense, setPlayer2Defense] = useState(50);
 
     const [myTurn, setMyTurn] = useState(1)
     const [start, setStart] = useState(false);
@@ -57,20 +60,7 @@ function BattleScreen({ route, navigation }) {
     const skill3 = pokemon.skills[2].name;
     const skill4 = pokemon.skills[3].name;
 
-    // 화면 첫 실행, 새로고침
     useEffect(() =>{
-
-        // socket.emit('join',{
-        //     room: roomCode,
-        // });
-
-        // socket.on('getMyTurn',({myTurn}) =>{
-        //     setMyTurn(myTurn);
-        //     if(myTurn == 2){
-        //         setStart(true);
-        //     }
-        // })
-
         if(player1_hp == 0){
             setGameOver(true);
             setWinner(2);
@@ -78,23 +68,12 @@ function BattleScreen({ route, navigation }) {
             setGameOver(true);
             setWinner(1);
         }
-
-    },[])
-
-    useEffect(()=>{
-        // socket.emit('sendMyPokemon',{
-        //     myPokemon: pokemon,
-        // })
-        // socket.on("getPokemonEnemy",({pokemonEnemy}) =>{
-        //     setPokemonEnemy(pokemonEnemy);
-        // })
-    },[start])
+    },[player1_hp,player2_hp])
 
     useEffect(() => {
         socket.on("roomData", ({ users }) => {
             setUsers(users)
             if(users.length==2){
-                //console.log("pokemon setting..."+users[0].pokemon.name+users[1].pokemon.name)
                 setPlayer1Pokemon(users[0].pokemon)
                 //setPlayer1Hp(player1_pokemon.health);
                 setPlayer2Pokemon(users[1].pokemon)
@@ -107,49 +86,6 @@ function BattleScreen({ route, navigation }) {
             setCurrentUser(name)
         })
     }, [])
-    
-
-    // useEffect(()=>{
-    //     socket.emit('initGameState',{
-    //         gameOver: false,
-    //         turn: 'Player 1',
-    //         player1_hp: 500,
-    //         player2_hp: 500,
-    //         player1_pokemon: player1_pokemon,
-    //         player2_pokemon: player2_pokemon,
-    //     })
-    // },[])
-
-
-    // useEffect(() => {
-    //     socket.on('initGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
-    //         console.log("client initGameState called")
-    //         setGameOver(gameOver)
-    //         setTurn(turn)
-    //         setPlayer1Hp(player1_hp)
-    //         setPlayer2Hp(player2_hp)
-    //         setPlayer1Pokemon(player1_pokemon)
-    //         setPlayer2Pokemon(player2_pokemon)
-    //     })
-
-    //     socket.on('updateGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
-    //         console.log("client updateGame called")
-    //         gameOver && setGameOver(gameOver)
-    //         turn && setTurn(turn)
-    //         player1_hp && setPlayer1Hp(player1_hp)
-    //         player2_hp && setPlayer2Hp(player2_hp)
-    //         player1_pokemon && setPlayer1Pokemon(player1_pokemon)
-    //         player2_pokemon && setPlayer2Pokemon(player2_pokemon)
-    //     })
-    // }, [])
-
-    //runs once on component mount
-    
-        
-        // turn 소켓 받는 함수 넣고
-        // socket.on('receiveTurn', ({turn}) => {
-        //     setTurn(turn)
-        // });
 
     useEffect(() =>{
         // 버튼 enable
@@ -157,9 +93,7 @@ function BattleScreen({ route, navigation }) {
 
     useEffect(() =>{
         if(gameOver){
-            console.log('over');
-            console.log(winner);
-            navigation.navigate("End");
+            navigation.navigate("End",{img: pokemon.imgfront, userName: userName, isWin: 'Win'});
         }
     },[gameOver])
 
@@ -170,16 +104,44 @@ function BattleScreen({ route, navigation }) {
                  pokemon.skills[idx].target];        
     }
     function checkDead(hp,damage){
-        if(hp - damage <= 0)
+        if(hp - damage*(100-player2_defense)/100 <= 0)
             return 0;
         else
-            return hp - damage;
+            return hp - damage*(100-player2_defense)/100;
     }
-    function ckeckBuff(hp,buff){
+    function checkHill(hp,buff){
         if(hp + buff >= maxHp)
             return maxHp;
         else
             return hp + buff;
+    }
+    function checkDebuff(defense,debuff){
+        if(defense - debuff <= 0)
+            return 0;
+        else
+            return defense - debuff;
+    }
+    function checkBuff(defense,buff){
+        if(defense + buff >= 50)
+            return 50;
+        else
+            return defense+buff;
+    }
+    function useSkill(skillType,skillDamage){
+        switch(skillType){
+            case '공격': 
+                setPlayer2Hp(parseInt(checkDead(player2_hp,skillDamage)));
+                break;
+            case '힐':
+                setPlayer1Hp(checkHill(player1_hp,skillDamage));
+                break;
+            case '디버프':
+                setPlayer2Defense(checkDebuff(player2_defense,skillDamage));
+                break;
+            case '버프':
+                setPlayer1Defense(checkBuff(player1_defense,skillDamage));
+                break;
+        }
     }
     const pressSkill1 = () => {
         if(turn == myTurn){
@@ -188,18 +150,8 @@ function BattleScreen({ route, navigation }) {
             const skillType = skill[1];
             const skillDamage = skill[2];
             const skillTarget = skill[3];
-
-            switch(skillType){
-                case '공격':
-                    setPlayer2Hp(checkDead(player2_hp,skillDamage));
-                    console.log('attack');
-                    console.log(player2_pokemon.health);
-                    break;
-                case '버프':
-                    // if(skillTarget == 'self'){
-                    //     set
-                    // }
-            }
+            
+            useSkill(skillType,skillDamage);
         }
     }
     const pressSkill2 = () => {
@@ -209,6 +161,8 @@ function BattleScreen({ route, navigation }) {
             const skillType = skill[1];
             const skillDamage = skill[2];
             const skillTarget = skill[3];
+            
+            useSkill(skillType,skillDamage);
         }
     }
     const pressSkill3 = () => {
@@ -218,6 +172,8 @@ function BattleScreen({ route, navigation }) {
             const skillType = skill[1];
             const skillDamage = skill[2];
             const skillTarget = skill[3];
+
+            useSkill(skillType,skillDamage);
         }
     }
     const pressSkill4 = () => {
@@ -227,6 +183,8 @@ function BattleScreen({ route, navigation }) {
             const skillType = skill[1];
             const skillDamage = skill[2];
             const skillTarget = skill[3];
+
+            useSkill(skillType,skillDamage);
         }
     }
 
@@ -239,8 +197,10 @@ function BattleScreen({ route, navigation }) {
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
                     {users.length==2
-                    && <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> {player2_hp}/{maxHp} </Text>
+                    && <TouchableOpacity style={styles.hpbar} disabled={true}>
+                        <Text style={styles.hpText}> {player2_hp}/{maxHp} </Text>
+                        <Text style={styles.defenseText}> {player2_defense}</Text>
+                        <Text style>%</Text>
                         </TouchableOpacity> }
                     {users.length==2
                     && <Image
@@ -249,27 +209,29 @@ function BattleScreen({ route, navigation }) {
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
                     <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
-                    <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> {player1_hp}/{maxHp} </Text>
+                    <TouchableOpacity style={styles.hpbar} disabled={true}>
+                        <Text style={styles.hpText}> {player1_hp}/{maxHp} </Text>
+                        <Text style={styles.defenseText}> {player1_defense}</Text>
+                        <Text style>%</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
 
             <View style={styles.interface}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button} onPress={pressSkill1}>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill1} disabled={users.length < 2}>
                         <Text style={styles.buttonText}>{skill1}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={pressSkill2}>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill2} disabled={users.length < 2}>
                         <Text style={styles.buttonText}>{skill2}</Text>
                     </TouchableOpacity> 
                 </View>
                 
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button} onPress={pressSkill3}>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill3} disabled={users.length < 2}>
                         <Text style={styles.buttonText}>{skill3}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={pressSkill4}>
+                    <TouchableOpacity style={styles.button} onPress={pressSkill4} disabled={users.length < 2}>
                         <Text style={styles.buttonText}>{skill4}</Text>
                     </TouchableOpacity> 
                 </View>
@@ -303,11 +265,23 @@ function BattleScreen({ route, navigation }) {
     },
     hpbar: {
         width: '50%',
-        backgroundColor: 'black',
+        backgroundColor: 'rgba(255, 255, 255, 0.6)',
         height: 55,
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'row',
+    },
+    hpText: {
+        color: 'black',
+        fontSize: 16,
+        fontWeight: '400'
+    },
+    defenseText: {
+        color: 'black',
+        fontSize: 16,
+        fontWeight: '400',
+        marginLeft: 30,
     },
     buttonText: {
         color: 'white',
