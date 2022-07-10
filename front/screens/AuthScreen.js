@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
+import React, { useState } from 'react';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, TextInput,Image} from 'react-native';
 
 // const API_URL = Platform.OS === 'ios' ? 'http://localhost:443' : 'http://10.0.2.2:443';
 const API_URL = 'http://192.249.18.107:443';
@@ -13,15 +13,6 @@ function AuthScreen({navigation}) {
     const [message, setMessage] = useState('');
     const [isLogin, setIsLogin] = useState(true);
     
-    const [loading, setLoading] = useState(false);
-
-    useEffect(()=>{
-        setLoading(true);
-        setTimeout(()=>{
-            setLoading(false)
-        },5000)
-    },[]);
-
     const onChangeHandler = () => {
         setIsLogin(!isLogin);
         setMessage('');
@@ -112,6 +103,14 @@ function AuthScreen({navigation}) {
                         <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
                             <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
                         </TouchableOpacity>
+                        {isLogin && <TouchableOpacity style={styles.buttonAltKakao}>
+                            <Image source={require('../public/images/kakao.png')} style={styles.buttonImage}></Image>
+                            <Text style={styles.buttonAltTextKG}>Kakao 로그인</Text>
+                        </TouchableOpacity>}
+                        {isLogin && <TouchableOpacity style={styles.buttonAltGoogle}>
+                        <Image source={require('../public/images/google.png')} style={styles.buttonImage}></Image>
+                            <Text style={styles.buttonAltTextKG}>Google 로그인</Text>
+                        </TouchableOpacity>}
                     </View>   
                 </View>
             </View>
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
         width: '80%',
         marginTop: '40%',
         borderRadius: 20,
-        maxHeight: 380,
+        maxHeight: 450,
         paddingBottom: '30%',
     },
     heading: {
@@ -186,10 +185,44 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 5,
     },
+    buttonAltKakao: {
+        width: '80%',
+        height: 40,
+        borderRadius: 50,
+        backgroundColor: 'yellow',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 5,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+    buttonAltGoogle: {
+        width: '80%',
+        height: 40,
+        borderRadius: 50,
+        backgroundColor: 'white',
+        borderColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 5,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
     buttonAltText: {
         color: 'black',
         fontSize: 16,
-        fontWeight: '400',
+        fontWeight: 'bold',
+    },
+    buttonAltTextKG: {
+        color: 'black',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: '13%',
+    },
+    buttonImage:{
+        maxHeight:20,
+        maxWidth:20,
+        marginLeft:'10%'
     },
     message: {
         fontSize: 16,
