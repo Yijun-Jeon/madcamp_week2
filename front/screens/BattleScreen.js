@@ -1,11 +1,13 @@
 import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Image,Button,ButtonGroup,ActivityIndicator} from 'react-native';
 import React, { useState, useEffect} from 'react';
 import io from 'socket.io-client';
+import {Pokemon, pokemons} from '..//utils/character/Pokemon'
 
 const SOCKET_URL ='http://192.249.18.107:443';
 let socket
 function BattleScreen({ route, navigation }) {
     const roomCode = route.params.roomCode;
+    const [pokemon, setPokemon] = useState(route.params.pokemon);
     const pokemon_idx = route.params.pokemon_idx
     const username = route.params.username
 
@@ -93,12 +95,10 @@ function BattleScreen({ route, navigation }) {
         })
     }, [])
 
-    const [pokemon, setPokemon] = useState(route.params.pokemon);
     const skill1 = pokemon.skills[0];
     const skill2 = pokemon.skills[1];
     const skill3 = pokemon.skills[2];
     const skill4 = pokemon.skills[3];
-    
 
     return (
         <View style={styles.container}>
@@ -111,10 +111,10 @@ function BattleScreen({ route, navigation }) {
                     <TouchableOpacity style={styles.hpbar}>
                         <Text style={styles.buttonText}> 100/100 </Text>
                     </TouchableOpacity>
-                    <Image style={styles.characterImage} source={require('../public/images/pikachu_battle.gif')}/>
+                    <Image style={styles.characterImage} source={pokemon.imgbattlefront}/>
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
-                    <Image style={styles.characterImage} source={require('../public/images/paili_battle_back.gif')}/>
+                    <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
                     <TouchableOpacity style={styles.hpbar}>
                         <Text style={styles.buttonText}> 100/100 </Text>
                     </TouchableOpacity>
