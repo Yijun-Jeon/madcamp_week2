@@ -7,16 +7,13 @@ const SOCKET_URL ='http://192.249.18.107:443';
 function SelectScreen({route, navigation}){
 
     // const roomCode = route.params.roomCode;
-    const socket = io.connect(SOCKET_URL, {
-        transports: ['websocket'],
-        reconnectionAttempts: 15 //Nombre de fois qu'il doit réessayer de se connecter
-    });
+
+
       
     const moveToBattle = () =>{
         navigation.navigate('Battle',{roomCode: route.params.roomCode})
     }
 
-    socket.emit("join", {room: route.params.roomCode});
 
     return(
         <ImageBackground source={require('../public/images/select.jpg')} style={styles.image}>

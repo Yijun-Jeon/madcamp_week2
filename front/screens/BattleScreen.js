@@ -3,14 +3,96 @@ import React, { useState, useEffect} from 'react';
 import io from 'socket.io-client';
 
 const SOCKET_URL ='http://192.249.18.107:443';
-
+let socket
 function BattleScreen({ route, navigation }) {
-    const socket = io.connect(SOCKET_URL, {
-      transports: ['websocket'],
-      reconnectionAttempts: 15 
-    });
-
     const roomCode = route.params.roomCode;
+    const pokemon_idx = route.params.pokemon_idx
+    const username = route.params.username
+
+    //initialize socket state
+    const [room, setRoom] = useState(roomCode)
+    const [roomFull, setRoomFull] = useState(false)
+    const [users, setUsers] = useState([])
+    const [currentUser, setCurrentUser] = useState('')
+
+    useEffect(() => {
+        const connectionOptions =  {
+            "forceNew" : true,
+            "reconnectionAttempts": "Infinity", 
+            "timeout" : 10000,                  
+            "transports" : ["websocket"]
+        }
+        socket = io.connect(SOCKET_URL, connectionOptions)
+
+        socket.emit('join', {room: room}, (error) => {
+            if(error)
+                setRoomFull(true)
+        })
+
+        //cleanup on component unmount
+        return function cleanup() {
+            socket.emit('room_disconnect')
+            //shut down connnection instance
+            socket.off()
+        }
+    }, [])
+
+    //initialize game state
+    const [gameOver, setGameOver] = useState(true)
+    const [winner, setWinner] = useState('')
+    const [turn, setTurn] = useState('')
+    const [player1_hp, setPlayer1Hp] = useState([])
+    const [player2_hp, setPlayer2Hp] = useState([])
+    const [player1_pokemon, setPlayer1Pokemon] = useState([])
+    const [player2_pokemon, setPlayer2Pokemon] = useState([])
+   
+
+    //runs once on component mount
+    useEffect(() => {
+        //send initial state to server
+        socket.emit('initGameState', {
+            gameOver: false,
+            turn: 'Player 1',
+            player1_hp: 500,
+            player2_hp: 500,
+        })
+    }, [])
+
+
+    useEffect(() => {
+        socket.on('initGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_pokemon, player2_pokemon}) => {
+            setGameOver(gameOver)
+            setTurn(turn)
+            setPlayer1Hp(player1_hp)
+            setPlayer2Hp(player2_hp)
+            setPlayer1Pokemon(player1_pokemon)
+            setPlayer2Pokemon(player2_pokemon)
+        })
+
+        socket.on('updateGameState', ({ gameOver, winner, turn, player1_hp, player2_hp, currentColor, currentNumber, playedCardsPile, drawCardPile }) => {
+            gameOver && setGameOver(gameOver)
+            gameOver===true && playGameOverSound()
+            winner && setWinner(winner)
+            turn && setTurn(turn)
+            player1Deck && setPlayer1Deck(player1Deck)
+            player2Deck && setPlayer2Deck(player2Deck)
+            currentColor && setCurrentColor(currentColor)
+            currentNumber && setCurrentNumber(currentNumber)
+            playedCardsPile && setPlayedCardsPile(playedCardsPile)
+            drawCardPile && setDrawCardPile(drawCardPile)
+            setUnoButtonPressed(false)
+        })
+
+        socket.on("roomData", ({ users }) => {
+            setUsers(users)
+        })
+
+        socket.on('currentUserData', ({ name }) => {
+            setCurrentUser(name)
+            console.log(name)
+        })
+    }, [])
+
 
     const [Pokemon, setPokemon] = useState(0)
     const skill1 = '몸통박치기';
@@ -18,7 +100,6 @@ function BattleScreen({ route, navigation }) {
     const skill3 = '10만볼트';
     const skill4 = '번개';
 
-    socket.emit("chatting", "from front");
 
     return (
         <View style={styles.container}>
