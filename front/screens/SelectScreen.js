@@ -72,7 +72,7 @@ function SelectScreen({route, navigation}){
                             <Text style={styles.heading}>몸무게 :</Text>
                             <Text style={styles.heading}>분류 :</Text>
                     </View>
-                    <View style={{flex: 1,alignItems:'center',justifyContent:'space-evenly'}}>
+                    <View style={{flex: 1.5,alignItems:'center',justifyContent:'space-evenly'}}>
                         <Text style={styles.explain}>{name}</Text>
                         <Text style={styles.explain}>{type}</Text>
                         <Text style={styles.explain}>{killo}</Text>

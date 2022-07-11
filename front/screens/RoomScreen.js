@@ -37,15 +37,13 @@ function RoomScreen({ route, navigation }) {
         }
     }
 
-    socket.emit("chatting", "from front");
-
     return (
         <ImageBackground source={require('../public/images/roomback.png')} style={styles.image}>
             <View style={{flex: 2}}>
             </View>
             <View style={{flex: 10}}>
-                <View style={styles.card}>
-                    <Text style={styles.heading}>User Name:</Text>
+                <View style={styles.card} alignItems='center'>
+                    <Text style={styles.heading}>User Name</Text>
                     <Text style={[styles.heading,{color:'black'}]}>{userName}</Text>
                 </View>
             </View>
@@ -60,10 +58,6 @@ function RoomScreen({ route, navigation }) {
                     <Text style={styles.buttonAltText}>CREATE GAME</Text>
                 </TouchableOpacity>
             </View>
-            
-
-            
-
         </ImageBackground>
     );
   }
@@ -86,8 +80,6 @@ function RoomScreen({ route, navigation }) {
     heading: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginLeft: '10%',
-        marginTop: '5%',
         color:'blue',
     },
     form: {
