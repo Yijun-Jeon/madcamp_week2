@@ -8,6 +8,7 @@ const SOCKET_URL ='http://192.249.18.107:443';
 function RoomScreen({ route, navigation }) {
     const [roomCode, setRoomCode] = useState('');
     const [roomCodeValid, setRoomCodeValid] = useState(false);
+    const [userName,setUserName] = useState(route.params.userName);
     
     const socket = io.connect(SOCKET_URL, {
       transports: ['websocket'],
@@ -24,11 +25,11 @@ function RoomScreen({ route, navigation }) {
         }
     }
     const moveToSelect = () =>{
-        navigation.navigate('Select',{userName: route.params.userName, roomCode: makeid()});
+        navigation.navigate('Select',{roomCode: makeid(),userName: userName});
     }
     const joinToSelect = () =>{
         if(roomCodeValid){
-            navigation.navigate('Select',{userName: route.params.userName, roomCode: roomCode});
+            navigation.navigate('Select',{roomCode: roomCode, userName: userName});
         }else{
             Alert.alert(
                 "Invalid Room Code!"
@@ -45,7 +46,7 @@ function RoomScreen({ route, navigation }) {
             <View style={{flex: 10}}>
                 <View style={styles.card}>
                     <Text style={styles.heading}>User Name:</Text>
-                    <Text style={[styles.heading,{color:'black'}]}>{route.params.userName}</Text>
+                    <Text style={[styles.heading,{color:'black'}]}>{userName}</Text>
                 </View>
             </View>
             <View style={{flex: 4, alignItems: 'flex-end',marginBottom:30,marginRight:10}}>

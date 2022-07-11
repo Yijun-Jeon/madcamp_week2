@@ -1,9 +1,10 @@
-import {View,Text} from 'react-native';
+import {View,Text,Image} from 'react-native';
+import React, { useState,useEffect } from 'react';
 
 function LoadScreen(){
     return(
         <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
-            <Text>loading</Text>
+            <Image source={require('../public/images/pikachu_load.gif')}></Image>
         </View>
     );
 }

@@ -2,7 +2,7 @@ let skills = {
     '몸통박치기': {
         name: '몸통박치기',
 		type: '공격',
-        damage: 15,
+        damage: 30,
         target: 'enemy'
     },
     '10만 볼트': {
@@ -19,16 +19,14 @@ let skills = {
 	},
 	'꼬리 흔들기': {
 		name: '꼬리 흔들기',
-		type: '버프',
-		damage: 0,
-		debuff: 100,
+		type: '디버프',
+		damage: 10,
 		target: 'enemy'
 	},
 	'울음소리': {
 		name: '울음소리',
-		type: '버프',
-		damage: 0,
-		debuff: 100,
+		type: '디버프',
+		damage: 10,
 		target: 'enemy'
 	},
 	'화염방사': {
@@ -82,15 +80,13 @@ let skills = {
 	'빛의 장막': {
 		name: '빛의 장막',
 		type: '버프',
-		damage: 0,
-		buff: 100,
+		damage: 10,
 		target: 'self'
 	},
 	'수면': {
 		name: '수면',
-		type: '버프',
-		damage: 0,
-		buff: 100,
+		type: '힐',
+		damage: 100,
 		target: 'self'
 	}
 };

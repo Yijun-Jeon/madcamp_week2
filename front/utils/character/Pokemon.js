@@ -1,4 +1,4 @@
-import {skills} from './skills.js';
+import {skills} from './Skills.js';
 
 class Pokemon{
     constructor(name,type,health,imgfront,imgback,imgbattlefront,imgbattleback,skills){
@@ -63,7 +63,7 @@ pokemons.push(new Pokemon('피카츄','전기',500,require('../../public/images/
             ,require('../../public/images/pikachu_battle.gif'),require('../../public/images/pikachu_battle_back.gif')
             ,[skills['몸통박치기'],skills['10만 볼트'],skills['100만 볼트'],skills['꼬리 흔들기']]))
   
-pokemons.push(new Pokemon('파이리','불꽃',500,require('../../public/images/paili.gif'),require('../../public/images/paili_back.gif')
+pokemons.push(new Pokemon('파이리','불꽃',400,require('../../public/images/paili.gif'),require('../../public/images/paili_back.gif')
 ,require('../../public/images/paili_battle.gif'),require('../../public/images/paili_battle_back.gif')
 ,[skills['몸통박치기'],skills['울음소리'],skills['화염방사'],skills['불대문자']]))
 
@@ -71,7 +71,7 @@ pokemons.push(new Pokemon('꼬부기','물',500,require('../../public/images/kko
 ,require('../../public/images/kkobugi_battle.gif'),require('../../public/images/kkobugi_battle_back.gif')
 ,[skills['몸통박치기'],skills['물대포'],skills['아쿠아테일'],skills['하이드로펌프']]))
 
-pokemons.push(new Pokemon('이상해씨','풀',500,require('../../public/images/isanghaessi.gif'),require('../../public/images/isanghaessi_back.gif')
+pokemons.push(new Pokemon('이상해씨','풀',400,require('../../public/images/isanghaessi.gif'),require('../../public/images/isanghaessi_back.gif')
 ,require('../../public/images/isanghaessi_battle.gif'),require('../../public/images/isanghaessi_battle_back.gif')
 ,[skills['몸통박치기'],skills['꼬리 흔들기'],skills['매지컬리프'],skills['지진']]))
 
