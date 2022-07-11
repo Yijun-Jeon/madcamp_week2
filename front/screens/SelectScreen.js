@@ -29,7 +29,7 @@ function SelectScreen({route, navigation}){
     }
     
     const moveToBattle = () =>{
-        navigation.navigate('Battle',{roomCode: route.params.roomCode ,  pokemon: pokemon})
+        navigation.navigate('Battle',{username: route.params.userName, roomCode: route.params.roomCode ,  pokemon: pokemon})
     }
 
 

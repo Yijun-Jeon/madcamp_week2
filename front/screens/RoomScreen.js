@@ -24,11 +24,11 @@ function RoomScreen({ route, navigation }) {
         }
     }
     const moveToSelect = () =>{
-        navigation.navigate('Select',{roomCode: makeid()});
+        navigation.navigate('Select',{userName: route.params.userName, roomCode: makeid()});
     }
     const joinToSelect = () =>{
         if(roomCodeValid){
-            navigation.navigate('Select',{roomCode: roomCode});
+            navigation.navigate('Select',{userName: route.params.userName, roomCode: roomCode});
         }else{
             Alert.alert(
                 "Invalid Room Code!"
