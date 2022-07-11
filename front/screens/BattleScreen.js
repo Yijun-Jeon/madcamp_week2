@@ -102,6 +102,7 @@ function BattleScreen({ route, navigation }) {
 
 
         socket.on('updateGameState', ({ gameOver, winner, turn, p1_state, p2_state}) => {
+            console.log(gameOver)
             gameOver && setGameOver(gameOver);
             winner && setWinner(winner);
             turn && setTurn(turn);
@@ -141,26 +142,18 @@ function BattleScreen({ route, navigation }) {
             var delta = SkillHandler(skill_idx, player)
             if(player=='Player 1'){
                 socket.emit('updateGameState', {
-                    gameOver: checkGameOver(p2_state[0]),
-                    winner: checkWinner(p2_state[0], 'Player 1'),
+                    gameOver: checkGameOver(p2_state[0]+delta[3]),
+                    winner: checkWinner(p2_state[0]+delta[3], 'Player 1'),
                     turn: 'Player 2',
-                    // player1_hp: player1_hp+delta[0],
-                    // player2_hp: player2_hp+delta[1],
-                    // player1_defense: player1_defense+delta[2],
-                    // player2_defense: player2_defense+delta[3]
                     p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
                     p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]]
                 })
             }
             else{
                 socket.emit('updateGameState', {
-                    gameOver: checkGameOver(p1_state[0]),
-                    winner: checkWinner(p1_state[0], 'Player 2'),
+                    gameOver: checkGameOver(p1_state[0]+delta[0]),
+                    winner: checkWinner(p1_state[0]+delta[0], 'Player 2'),
                     turn: 'Player 1',
-                    // player1_hp: player1_hp+delta[0],
-                    // player2_hp: player2_hp+delta[1],
-                    // player1_defense: player1_defense+delta[2],
-                    // player2_defense: player2_defense+delta[3]
                     p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
                     p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]]
                 })
@@ -304,6 +297,14 @@ function BattleScreen({ route, navigation }) {
                     <Text style={{fontSize: 20, color:'black',fontWeight:'bold'}}>Skill Point: {skillpoint}</Text>
                 </ImageBackground>
 
+                <View style={{backgroundColor: "white", flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
+                    <Text> text </Text>
+                </View> 
+                
+                {(users.length < 2 || turn!==currentUser) ? 
+                <View style={[styles.interface, {alignItems: 'center', justifyContent: 'center'}]}>
+                    <ActivityIndicator size="large" color="#000000" />
+                </View> : 
                 <View style={styles.interface}>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
@@ -315,7 +316,7 @@ function BattleScreen({ route, navigation }) {
                             <Text style={styles.spText}>SP:1</Text>
                         </TouchableOpacity> 
                     </View>
-                    
+        
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 3} onPress={()=>onSkillPressedHandler(2)}>
                             <Text style={styles.buttonText}>{skill3}</Text>
@@ -326,7 +327,7 @@ function BattleScreen({ route, navigation }) {
                             <Text style={styles.spText}>SP:5</Text>
                         </TouchableOpacity> 
                     </View>
-                </View>
+                </View>}
             </View>
         );
     }else{

@@ -40,8 +40,6 @@ function RoomScreen({ route, navigation }) {
         }
     }
 
-    socket.emit("chatting", "from front");
-
     return (
         <ImageBackground source={require('../public/images/roomback.png')} style={styles.image}>
             <View style={{flex: 2,alignItems:'flex-end',justifyContent:'flex-end'}}>
