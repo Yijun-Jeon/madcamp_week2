@@ -49,6 +49,11 @@ function App() {
     require('./public/images/blank.png'),
     require('./public/images/attack.png'),
     require('./public/images/defense.png'),
+    require('./public/images/defense.png'),
+    require('./public/images/roomcode.png'),
+    require('./public/images/exit.png'),
+    require('./public/images/pikachu_load.gif'),
+    require('./public/images/digda.gif'),
   ]);
 
   if(!imagesLoaded){

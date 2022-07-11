@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput,Alert} from 'react-native';
+import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput,Alert,Image} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import {makeid} from '../utils/randomCodeGenerator';
@@ -27,6 +27,9 @@ function RoomScreen({ route, navigation }) {
     const moveToSelect = () =>{
         navigation.navigate('Select',{roomCode: makeid(),userName: userName});
     }
+    const moveToLogin = () =>{
+        navigation.navigate('Login');
+    }
     const joinToSelect = () =>{
         if(roomCodeValid){
             navigation.navigate('Select',{roomCode: roomCode, userName: userName});
@@ -41,13 +44,16 @@ function RoomScreen({ route, navigation }) {
 
     return (
         <ImageBackground source={require('../public/images/roomback.png')} style={styles.image}>
-            <View style={{flex: 2}}>
+            <View style={{flex: 2,alignItems:'flex-end',justifyContent:'flex-end'}}>
             </View>
-            <View style={{flex: 10}}>
+            <View style={{flex: 10,flexDirection:'row',justifyContent:'space-between'}}>
                 <View style={styles.card}>
                     <Text style={styles.heading}>User Name:</Text>
                     <Text style={[styles.heading,{color:'black'}]}>{userName}</Text>
                 </View>
+                <TouchableOpacity onPress={moveToLogin}>
+                    <Image source={require('../public/images/exit.png')} style={{width:70,height:70,marginRight:'4%',marginTop:'3%'}} ></Image>
+                </TouchableOpacity>
             </View>
             <View style={{flex: 4, alignItems: 'flex-end',marginBottom:30,marginRight:10}}>
                 <TextInput style={styles.input} placeholder = "Game Code" onChangeText={(text) => roomCodeHandler(text)}></TextInput>
@@ -60,10 +66,10 @@ function RoomScreen({ route, navigation }) {
                     <Text style={styles.buttonAltText}>CREATE GAME</Text>
                 </TouchableOpacity>
             </View>
-            
-
-            
-
+            <View style={{flex:5,flexDirection:'row'}}>
+                <Image source={require('../public/images/pikachu_load.gif')} style={{marginLeft:'18%', width:80,height:80}}></Image>
+                <Image source={require('../public/images/digda.gif')} style={{marginLeft:'30%',marginTop:'17%', width:70,height:70}}></Image>
+            </View>
         </ImageBackground>
     );
   }
@@ -75,18 +81,18 @@ function RoomScreen({ route, navigation }) {
     },  
     card: {
         flex: 1,
-        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
         borderRadius: 20,
         width: '40%',
         maxHeight: 70,
         justifyContent:'flex-start',
         alignItems: 'center',
         marginLeft: 20,
+        maxWidth:150,
     },
     heading: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginLeft: '10%',
         marginTop: '5%',
         color:'blue',
     },
@@ -139,7 +145,7 @@ function RoomScreen({ route, navigation }) {
     buttonAltText: {
         color: 'black',
         fontSize: 16,
-        fontWeight: '400',
+        fontWeight: 'bold',
     },
     message: {
         fontSize: 16,

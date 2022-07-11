@@ -12,6 +12,7 @@ function SelectScreen({route, navigation}){
     const [type,setType] = useState('전기');
     const [killo, setKillo] = useState('6.0kg');
     const [species,setSpecies] = useState('쥐 포켓몬');
+    const [textColor, setTextColor] = useState('yellow');
     
     const selectPikachu = () =>{
         setPokemon(pokemons[0]);
@@ -19,6 +20,7 @@ function SelectScreen({route, navigation}){
         setType('전기');
         setKillo('6.0kg');
         setSpecies('쥐 포켓몬');
+        setTextColor('yellow');
     }
 
     const selectPaili = () =>{
@@ -27,6 +29,7 @@ function SelectScreen({route, navigation}){
         setType('불꽃');
         setKillo('8.5kg');
         setSpecies('도롱뇽 포켓몬');
+        setTextColor('orange');
     }
 
     const selectKkobugi = () =>{
@@ -35,6 +38,7 @@ function SelectScreen({route, navigation}){
         setType('물');
         setKillo('9.0kg');
         setSpecies('꼬마거북 포켓몬');
+        setTextColor('rgba(154, 236, 219,1.0)');
     }
 
     const selectIsanghaessi = () =>{
@@ -43,6 +47,7 @@ function SelectScreen({route, navigation}){
         setType('풀 / 독');
         setKillo('6.9kg');
         setSpecies('씨앗 포켓몬');
+        setTextColor('green');
     }
 
     const selectMyu = () =>{
@@ -51,28 +56,29 @@ function SelectScreen({route, navigation}){
         setType('에스퍼');
         setKillo('4.0kg');
         setSpecies('신종 포켓몬');
+        setTextColor('pink');
     }
     
     const moveToBattle = () =>{
-        navigation.navigate('Battle',{roomCode: route.params.roomCode ,  pokemon: pokemon, userName: route.params.userName})
+        navigation.navigate('Battle',{roomCode: route.params.roomCode ,  pokemon: pokemon, userName: route.params.userName, color: textColor})
     }
 
 
     return(
         <ImageBackground source={require('../public/images/select.jpg')} style={styles.image}>
-            <View style={{flex: 0.2,marginLeft:'10%', alignItems:'flex-start', justifyContent:'flex-end',marginTop:50}}>
-                <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
-                <Text style={{}}>{route.params.roomCode}</Text>
+            <View style={{flex: 1,marginLeft:'5%', alignItems:'flex-start', justifyContent:'flex-end',marginTop:50}}>
+                <Image source={require('../public/images/roomcode.png')}></Image>
+                <Text style={{fontSize:15, color:'white',fontWeight:'bold',marginLeft:'7%'}}>{route.params.roomCode}</Text>
             </View>
-            <View style={{flex: 5}}>
+            <View style={{flex: 7}}>
                 <View style={styles.card}>
                     <View style={{flex: 1, alignItems:'flex-end',justifyContent:'space-evenly'}}>
-                            <Text style={styles.heading}>이름 :</Text>
-                            <Text style={styles.heading}>타입 :</Text>
-                            <Text style={styles.heading}>몸무게 :</Text>
-                            <Text style={styles.heading}>분류 :</Text>
+                            <Text style={[styles.heading,{color:textColor}]}>이름 :</Text>
+                            <Text style={[styles.heading,{color:textColor}]}>타입 :</Text>
+                            <Text style={[styles.heading,{color:textColor}]}>몸무게 :</Text>
+                            <Text style={[styles.heading,{color:textColor}]}>분류 :</Text>
                     </View>
-                    <View style={{flex: 1,alignItems:'center',justifyContent:'space-evenly'}}>
+                    <View style={{flex: 2,alignItems:'center',justifyContent:'space-evenly'}}>
                         <Text style={styles.explain}>{name}</Text>
                         <Text style={styles.explain}>{type}</Text>
                         <Text style={styles.explain}>{killo}</Text>
@@ -80,7 +86,7 @@ function SelectScreen({route, navigation}){
                     </View>
                 </View>
             </View>
-            <View style={{flex: 4}}>
+            <View style={{flex: 6,marginBottom:50}}>
                 <View style={styles.images}>
                     <TouchableOpacity onPress={selectPikachu}>
                         <Image source={require('../public/images/pikachu.gif')}></Image>
@@ -99,8 +105,8 @@ function SelectScreen({route, navigation}){
                     </TouchableOpacity>
                 </View>
                 <View style={{flex: 1.3,alignItems:'center'}}>
-                    <TouchableOpacity style={{ width: '30%',marginTop:10, borderWidth: 2,borderRadius:50, height: 40,backgroundColor:'yellow', borderColor: 'red',justifyContent: 'center',alignItems: 'center',mcalarginVerti: 5}} onPress={moveToBattle}>
-                        <Text style={styles.buttonAltText}>OK</Text>
+                    <TouchableOpacity style={{ width: '30%',marginTop:10, borderWidth: 2,borderRadius:50, height: 40,backgroundColor:textColor, borderColor: 'white',justifyContent: 'center',alignItems: 'center',mcalarginVerti: 5}} onPress={moveToBattle}>
+                        <Text style={styles.buttonAltText}>Select</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -116,7 +122,7 @@ const styles = StyleSheet.create({
     card: {
         flex: 1,
         flexDirection: 'row',
-        backgroundColor: 'rgba(71, 255, 136, 0.3)',
+        backgroundColor: 'rgba(250, 170, 90, 0.2)',
         marginTop: '10%',
         marginBottom:'20%',
         borderRadius: 20,
@@ -130,9 +136,10 @@ const styles = StyleSheet.create({
         fontSize: 30,
     },
     explain:{
-        fontSize: 20,
-        marginTop: 2,
-        
+        fontSize: 25,
+        marginTop: 7,
+        fontWeight: '900',
+        color:'black',
     },
     form: {
         flex: 1,
@@ -198,7 +205,7 @@ const styles = StyleSheet.create({
     buttonAltText: {
         color: 'black',
         fontSize: 16,
-        fontWeight: '400',
+        fontWeight: 'bold',
     },
     message: {
         fontSize: 16,

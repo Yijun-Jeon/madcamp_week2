@@ -2,21 +2,21 @@ let skills = {
     '몸통박치기': {
         name: '몸통박치기',
 		type: '공격',
-        damage: 30,
+        damage: 20,
         target: 'enemy',
 		skilltype: '노말',
     },
     '10만 볼트': {
         name: '10만 볼트',
 		type: '공격',
-        damage: 25,
+        damage: 50,
         target: 'enemy',
 		skilltype: '전기',
 	},
 	'100만 볼트': {
 		name: '100만 볼트',
 		type: '공격',
-		damage: 50,
+		damage: 100,
 		target: 'enemy',
 		skilltype: '전기',
 	},
@@ -51,7 +51,7 @@ let skills = {
 	'물대포': {
 		name: '물대포',
 		type: '공격',
-		damage: 30,
+		damage: 20,
 		target: 'enemy',
 		skilltype: '물',
 	},
@@ -86,7 +86,7 @@ let skills = {
 	'사이코키네시스': {
 		name: '사이코키네시스',
 		type: '공격',
-		damage: 50,
+		damage: 80,
 		target: 'enemy',
 		skilltype: '에스퍼',
 	},

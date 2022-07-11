@@ -267,9 +267,9 @@ function BattleScreen({ route, navigation }) {
         return (
             <View style={styles.container}>
                 <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
-                    <View style={{flex: 0.2, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>    
-                        <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
-                        <Text style={{}}>{roomCode}</Text>
+                    <View style={{flex: 0.35, alignItems:'flex-start', justifyContent:'flex-end',marginTop:13,marginLeft:'5%'}}>    
+                        <Image source={require('../public/images/roomcode.png')}></Image>
+                        <Text style={{fontSize:15, color:'black',fontWeight:'bold',marginLeft:'7%'}}>{route.params.roomCode}</Text>
                     </View>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
                         {users.length==2 && 
@@ -301,27 +301,27 @@ function BattleScreen({ route, navigation }) {
                             <Image source={require('../public/images/defense.png')} style={styles.buttonImage}></Image>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{fontSize: 15, color:'purple'}}>Skill Point: {skillpoint}</Text>
+                    <Text style={{fontSize: 20, color:'black',fontWeight:'bold'}}>Skill Point: {skillpoint}</Text>
                 </ImageBackground>
 
                 <View style={styles.interface}>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                        <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
+                        <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
                             <Text style={styles.buttonText}>{skill1}</Text>
                             <Text style={styles.spText}>SP:1</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(1)}>
+                        <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(1)}>
                             <Text style={styles.buttonText}>{skill2}</Text>
                             <Text style={styles.spText}>SP:1</Text>
                         </TouchableOpacity> 
                     </View>
                     
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                        <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2 || skillpoint < 3} onPress={()=>onSkillPressedHandler(2)}>
+                        <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 3} onPress={()=>onSkillPressedHandler(2)}>
                             <Text style={styles.buttonText}>{skill3}</Text>
                             <Text style={styles.spText}>SP:3</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2 || skillpoint < 5} onPress={()=>onSkillPressedHandler(3)}>
+                        <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 5} onPress={()=>onSkillPressedHandler(3)}>
                             <Text style={styles.buttonText}>{skill4}</Text>
                             <Text style={styles.spText}>SP:5</Text>
                         </TouchableOpacity> 
@@ -363,17 +363,16 @@ function BattleScreen({ route, navigation }) {
     },
     button: {
         width: '48%',
-        backgroundColor: 'black',
         height: 55,
         borderRadius: 50,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         margin: 5,
         flexDirection:'row',
     },
     hpbar: {
         width: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
         height: 55,
         borderRadius: 50,
         justifyContent: 'center',
@@ -383,23 +382,26 @@ function BattleScreen({ route, navigation }) {
     hpText: {
         color: 'black',
         fontSize: 16,
-        fontWeight: '400',
+        fontWeight: 'bold',
         marginRight:5,
     },
     spText:{
-        color: 'white',
+        color: 'black',
         fontSize:12,
         marginLeft:15,
+        fontWeight:'bold',
+        marginRight:'10%',
     },
     defenseText: {
         color: 'black',
         fontSize: 16,
-        fontWeight: '400',
+        fontWeight: 'bold',
     },
     buttonText: {
-        color: 'white',
+        color: 'black',
         fontSize: 16,
-        fontWeight: '400'
+        fontWeight: 'bold',
+        marginLeft:'15%',
     },
     characterImage: {
         margin: 30
