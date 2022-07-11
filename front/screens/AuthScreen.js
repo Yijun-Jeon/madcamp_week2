@@ -76,6 +76,10 @@ function AuthScreen({navigation}) {
         });
     };
 
+    const onKakaoHandler = () => {
+        navigation.navigate('Kakao');
+    };
+
     const getMessage = () => {
         const status = isError ? `Error: ` : `Success: `;
         return status + message;
@@ -104,7 +108,7 @@ function AuthScreen({navigation}) {
                             <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
                         </TouchableOpacity>
                         {isLogin && <TouchableOpacity style={styles.buttonAltKakao}>
-                            <Image source={require('../public/images/kakao.png')} style={styles.buttonImage}></Image>
+                            <Image source={require('../public/images/kakao.png')} style={styles.buttonImage} onPress={onKakaoHandler}></Image>
                             <Text style={styles.buttonAltTextKG}>Kakao 로그인</Text>
                         </TouchableOpacity>}
                         {isLogin && <TouchableOpacity style={styles.buttonAltGoogle}>

@@ -19,13 +19,13 @@ let skills = {
 	},
 	'꼬리 흔들기': {
 		name: '꼬리 흔들기',
-		type: '디버프',
+		type: '방디버프',
 		damage: 10,
 		target: 'enemy'
 	},
 	'울음소리': {
 		name: '울음소리',
-		type: '디버프',
+		type: '공디버프',
 		damage: 10,
 		target: 'enemy'
 	},
@@ -79,7 +79,7 @@ let skills = {
 	},
 	'빛의 장막': {
 		name: '빛의 장막',
-		type: '버프',
+		type: '방버프',
 		damage: 10,
 		target: 'self'
 	},

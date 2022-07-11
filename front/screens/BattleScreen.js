@@ -45,12 +45,12 @@ function BattleScreen({ route, navigation }) {
     const [gameOver, setGameOver] = useState(false);
     const [winner, setWinner] = useState('');
     const [turn, setTurn] = useState('Player 1');
-    const [player1_hp, setPlayer1Hp] = useState([]);
-    const [player2_hp, setPlayer2Hp] = useState([]);
-    const [player1_defense, setPlayer1Defense] = useState([]);
-    const [player2_defense, setPlayer2Defense] = useState([]);
-    // const [player1_status, setPlayer1Status] = useState([]);
-    // const [player2_status, setPlayer2Status] = useState([]);
+    // const [player1_hp, setPlayer1Hp] = useState([]);
+    // const [player2_hp, setPlayer2Hp] = useState([]);
+    // const [player1_defense, setPlayer1Defense] = useState([]);
+    // const [player2_defense, setPlayer2Defense] = useState([]);
+    const [p1_state, setPlayer1State] = useState([]);
+    const [p2_state, setPlayer2State] = useState([]);
     const [player1_pokemon, setPlayer1Pokemon] = useState([pokemon]);
     const [player2_pokemon, setPlayer2Pokemon] = useState([]);
 
@@ -67,16 +67,18 @@ function BattleScreen({ route, navigation }) {
             setUsers(users);
             if(users.length==2){
                 setPlayer1Pokemon(users[0].pokemon)
-                setPlayer1Hp(users[0].pokemon.health);
+                setPlayer1State(users[0].pokemon.health,0,0);
                 setPlayer2Pokemon(users[1].pokemon)
-                setPlayer2Hp(users[1].pokemon.health);
+                setPlayer2State(users[1].pokemon.health,0,0);
                 socket.emit('initGameState',{
                     gameOver: false,
                     turn: 'Player 1',
-                    player1_hp: users[0].pokemon.health,
-                    player2_hp: users[1].pokemon.health,
-                    player1_defense: 0,
-                    player2_defense: 0,
+                    // player1_hp: users[0].pokemon.health,
+                    // player2_hp: users[1].pokemon.health,
+                    // player1_defense: 0,
+                    // player2_defense: 0,
+                    p1_state: [users[0].pokemon.health, 0, 0],
+                    p2_state: [users[1].pokemon.health, 0, 0],
                     player1_pokemon: users[0].pokemon,
                     player2_pokemon: users[1].pokemon,
                 });
@@ -89,26 +91,30 @@ function BattleScreen({ route, navigation }) {
     
 
     useEffect(() => {
-        socket.on('initGameState', ({ gameOver, turn, player1_hp, player2_hp, player1_defense, player2_defense,player1_pokemon, player2_pokemon }) => {
+        socket.on('initGameState', ({ gameOver, turn, p1_state, p2_state, player1_pokemon, player2_pokemon }) => {
             setGameOver(gameOver);
             setTurn(turn);
-            setPlayer1Hp(player1_hp);
-            setPlayer2Hp(player2_hp);
-            setPlayer1Defense(player1_defense);
-            setPlayer2Defense(player2_defense);
+            // setPlayer1Hp(player1_hp);
+            // setPlayer2Hp(player2_hp);
+            // setPlayer1Defense(player1_defense);
+            // setPlayer2Defense(player2_defense);
+            setPlayer1State(p1_state);
+            setPlayer2State(p2_state);
             setPlayer1Pokemon(player1_pokemon);
             setPlayer2Pokemon(player2_pokemon);
         });
 
 
-        socket.on('updateGameState', ({ gameOver, winner, turn, player1_hp, player2_hp, player1_defense, player2_defense}) => {
+        socket.on('updateGameState', ({ gameOver, winner, turn, p1_state, p2_state}) => {
             gameOver && setGameOver(gameOver);
             winner && setWinner(winner);
             turn && setTurn(turn);
-            player1_hp && setPlayer1Hp(player1_hp);
-            player2_hp && setPlayer2Hp(player2_hp);
-            player1_defense && setPlayer1Defense(player1_defense);
-            player2_defense && setPlayer2Defense(player2_defense);
+            // player1_hp && setPlayer1Hp(player1_hp);
+            // player2_hp && setPlayer2Hp(player2_hp);
+            // player1_defense && setPlayer1Defense(player1_defense);
+            // player2_defense && setPlayer2Defense(player2_defense);
+            p1_state && setPlayer1State(p1_state)
+            p2_state && setPlayer2State(p2_state)
         });
     },[]);
 
@@ -134,24 +140,28 @@ function BattleScreen({ route, navigation }) {
             var delta = SkillHandler(skill_idx, player)
             if(player=='Player 1'){
                 socket.emit('updateGameState', {
-                    gameOver: checkGameOver(player2_hp),
-                    winner: checkWinner(player2_hp, 'Player 1'),
+                    gameOver: checkGameOver(p2_state[0]),
+                    winner: checkWinner(p2_state[0], 'Player 1'),
                     turn: 'Player 2',
-                    player1_hp: player1_hp+delta[0],
-                    player2_hp: player2_hp+delta[1],
-                    player1_defense: player1_defense+delta[2],
-                    player2_defense: player2_defense+delta[3]
+                    // player1_hp: player1_hp+delta[0],
+                    // player2_hp: player2_hp+delta[1],
+                    // player1_defense: player1_defense+delta[2],
+                    // player2_defense: player2_defense+delta[3]
+                    p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
+                    p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]]
                 })
             }
             else{
                 socket.emit('updateGameState', {
-                    gameOver: checkGameOver(player1_hp),
-                    winner: checkWinner(player1_hp, 'Player 2'),
+                    gameOver: checkGameOver(p1_state[0]),
+                    winner: checkWinner(p1_state[0], 'Player 2'),
                     turn: 'Player 1',
-                    player1_hp: player1_hp+delta[0],
-                    player2_hp: player2_hp+delta[1],
-                    player1_defense: player1_defense+delta[2],
-                    player2_defense: player2_defense+delta[3]
+                    // player1_hp: player1_hp+delta[0],
+                    // player2_hp: player2_hp+delta[1],
+                    // player1_defense: player1_defense+delta[2],
+                    // player2_defense: player2_defense+delta[3]
+                    p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
+                    p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]]
                 })
             }   
         }
@@ -179,21 +189,29 @@ function BattleScreen({ route, navigation }) {
 
     function useSkill(skillType,skillDamage,player){
         var p1_hp=0
-        var p2_hp=0
+        var p1_atk=0
         var p1_df=0
+        var p2_hp=0
+        var p2_atk=0
         var p2_df=0
         if(player=='Player 1'){
             switch(skillType){
                 case '공격': 
-                    p2_hp = skillDamage*(1-player2_defense/100)>=player2_hp ? -player2_hp : -skillDamage*(1-player2_defense/100)
+                    p2_hp = skillDamage*(1-p2_state[2]/100+p1_state[1]/100)>=p2_state[0] ? -p2_state[0] : -skillDamage*(1-p2_state[2]/100+p1_state[1]/100)
                     break;
                 case '힐':
-                    p1_hp = skillDamage*(1-player1_defense/100)+player1_hp>=maxHp ? maxHp-player1_hp : skillDamage*(1-player1_defense/100)
+                    p1_hp = skillDamage+p1_state[0]>=player1_pokemon.health ? player1_pokemon.health-p1_state[0] : skillDamage
                     break;
-                case '디버프':
+                case '공디버프':
+                    p2_atk = -skillDamage
+                    break;
+                case '공버프':
+                    p1_atk = skillDamage
+                    break;
+                case '방디버프':
                     p2_df = -skillDamage
                     break;
-                case '버프':
+                case '방버프':
                     p1_df = skillDamage
                     break;
             }
@@ -201,22 +219,28 @@ function BattleScreen({ route, navigation }) {
         else{
             switch(skillType){
                 case '공격': 
-                    p1_hp = skillDamage*(1-player1_defense/100)>=player1_hp ? -player1_hp : -skillDamage*(1-player1_defense/100)
+                    p1_hp = skillDamage*(1-p1_state[2]/100+p2_state[1]/100)>=p1_state[0] ? -p1_state[0] : -skillDamage*(1-p1_state[2]/100+p2_state[1]/100)
                     break;
                 case '힐':
-                    p2_hp = skillDamage*(1-player2_defense/100)+player2_hp>=maxHp ? maxHp-player2_hp : skillDamage*(1-player2_defense/100)
+                    p2_hp = skillDamage+p2_state[0]>=player2_pokemon.health ? player2_pokemon.health-p2_state[0] : skillDamage
                     break;
-                case '디버프':
+                case '공디버프':
+                    p1_atk = -skillDamage
+                    break;
+                case '공버프':
+                    p2_atk = skillDamage
+                    break;
+                case '방디버프':
                     p1_df = -skillDamage
                     break;
-                case '버프':
+                case '방버프':
                     p2_df = skillDamage
                     break;
             }
         }
         console.log(p1_hp,p2_hp,p1_df,p2_df)
 
-        return [p1_hp,p2_hp,p1_df,p2_df]   
+        return [p1_hp, p1_atk, p1_df, p2_hp, p2_atk, p2_df]   
     }
 
     function getMyPokemon(){
@@ -225,6 +249,14 @@ function BattleScreen({ route, navigation }) {
 
     function getEnemyPokemon(){
         return currentUser=='Player 1'?player2_pokemon:player1_pokemon;
+    }
+
+    function getMyState(){
+        return currentUser=='Player 1'?p1_state:p2_state;
+    }
+
+    function getEnemyState(){
+        return currentUser=='Player 1'?p2_state:p1_state;
     }
 
 
@@ -238,22 +270,28 @@ function BattleScreen({ route, navigation }) {
                     <Text style={{}}>{roomCode}</Text>
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
-                    {users.length==2
-                    && <TouchableOpacity style={styles.hpbar} disabled={true}>
-                        <Text style={styles.hpText}> {currentUser=='Player 1'?player2_hp:player1_hp}/{currentUser=='Player 1'?player2_pokemon.health:player1_pokemon.health} </Text>
-                        <Text style={styles.defenseText}> {currentUser=='Player 1'?player2_defense:player1_defense}</Text>
+                    {users.length==2 && 
+                    <TouchableOpacity style={styles.hpbar} disabled={true}>
+                        <Text style={styles.hpText}> {getEnemyState()[0]}/{getEnemyPokemon().health} </Text>
+                        <Text style={styles.defenseText}> {getEnemyState()[1]}/{getEnemyState()[2]} </Text>
                         <Text style>%</Text>
-                        </TouchableOpacity> }
-                    {users.length==2
-                    && <Image
-                            style={styles.characterImage}
-                            source={currentUser=='Player 1'?player2_pokemon.imgbattlefront:player1_pokemon.imgbattlefront}/>}
+                    </TouchableOpacity> }
+                    {users.length==2 && 
+                    <Image
+                        style={styles.characterImage}
+                        source={getEnemyPokemon().imgbattlefront}/>}
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
                     <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
                     <TouchableOpacity style={styles.hpbar} disabled={true}>
-                        <Text style={styles.hpText}> {currentUser=='Player 1'?player1_hp:player2_hp}/{pokemon.health} </Text>
-                        <Text style={styles.defenseText}> {currentUser=='Player 1'?player1_defense:player2_defense}</Text>
+                        {users.length==2 ?
+                        <Text style={styles.hpText}> {getMyState()[0]}/{pokemon.health} </Text> :
+                        <Text style={styles.hpText}> {pokemon.health}/{pokemon.health} </Text>
+                        }
+                        {users.length==2 ?
+                        <Text style={styles.defenseText}> {getMyState()[1]}/{getMyState()[2]} </Text> :
+                        <Text style={styles.defenseText}> 0/0 </Text>
+                        }
                         <Text style>%</Text>
                     </TouchableOpacity>
                 </View>

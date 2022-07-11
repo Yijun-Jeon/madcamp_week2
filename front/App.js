@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { AuthScreen ,RoomScreen, SelectScreen, BattleScreen, LoadScreen, EndScreen} from './screens';
+import { AuthScreen ,RoomScreen, SelectScreen, BattleScreen, LoadScreen, EndScreen, KakaoScreen} from './screens';
 import { Asset } from 'expo-asset/build/Asset';
 
 const Stack = createStackNavigator();
@@ -76,6 +76,10 @@ function App() {
         <Stack.Screen
           name="End"
           component={EndScreen}
+        />
+        <Stack.Screen
+          name="Kakao"
+          component={KakaoScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
