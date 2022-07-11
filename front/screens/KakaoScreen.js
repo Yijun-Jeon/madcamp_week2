@@ -1,61 +1,73 @@
-import {Webview} from 'react-native-webview';
-import {View,Text,Image} from 'react-native';
-import React, { useState,useEffect } from 'react';
+import React from 'react';
+import { View } from "react-native";
+import { WebView } from 'react-native-webview';
 import axios from 'axios';
+import qs from 'querystring';
+
+ 
+
+// other import settings...
 
 const REST_API_KEY = 'c7e83064c28a89c1c1396870155b303d'
-const REDIRECT_URI  = 'http://192.249.18.107:443/oauth'
-
+const REDIRECT_URI = 'http://192.249.18.107:443/oauth'
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`;
 
-function KakaoScrren({navigation}) {
-    function LogInProgress(data) {
-        // access code는 url에 붙어 장황하게 날아온다.
-        // substringd으로 url에서 code=뒤를 substring하면 된다.
-        const exp = "code=";
-        var condition = data.indexOf(exp);
-        if (condition != -1) {
-            var request_code = data.substring(condition + exp.length);
-            // console.log("access code :: " + request_code);
-            // 토큰값 받기
-            requestToken(request_code);
+
+
+const KakaoLogin = ({ navigation }) => {
+    const getCode = (target) => {
+        const exp = 'code=';
+        const condition = target.indexOf(exp);
+        if (condition !== -1) {
+            const requestCode = target.substring(condition + exp.length);
+            requestToken(requestCode);
         }
     };
-
-    const requestToken = async (request_code) => {
-        var returnValue = "none";
-        var request_token_url = "https://kauth.kakao.com/oauth/token";
-        axios({
-            method: "post",
-            url: request_token_url,
-            params: {
-                grant_type: 'authorization_code',
-                client_id: 'ic',
-                redirect_uri: 'url',
-                code: request_code,
-            },
-        }).then(function (response) {
-            returnValue = response.data.access_token;
-        }).catch(function (error) {
-            console.log('error', error);
+    const requestToken = async (code) => {
+        const requestTokenUrl = 'https://kauth.kakao.com/oauth/token';
+        
+        const options = qs.stringify({
+            grant_type: 'authorization_code',
+            client_id: REST_API_KEY,
+            redirect_uri: REDIRECT_URI,
+            client_secret: '6Nw4x3HXrCLli4EaExKYgbY3967R5EsO',
+            code,
         });
+        
+        try {
+            const tokenResponse = await axios.post(requestTokenUrl, options);
+            const ACCESS_TOKEN = tokenResponse.data.access_token;
+            const body = {
+                ACCESS_TOKEN,
+            };
+            const response = await axios.post(REDIRECT_URI, body);
+            const value = response.data;
+            console.log(value.result)
+            navigation.navigate('Room', {userName: value.name});
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return (
         <View style={{ flex: 1 }}>
-        <WebView
+            <WebView
             style={{ flex: 1 }}
             source={{
-            uri: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`,
+                uri: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`,
             }}
             injectedJavaScript={INJECTED_JAVASCRIPT}
             javaScriptEnabled
             onMessage={event => {
-                navigation.navigate()
+                console.log("event start")
+                const data = event.nativeEvent.url;
+                getCode(data);
             }}
-        />
+            />
         </View>
-  );
-}
+    );
+};
 
-export default KakaoScrren;
+ 
+
+export default KakaoLogin;

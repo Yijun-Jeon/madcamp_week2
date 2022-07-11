@@ -107,8 +107,8 @@ function AuthScreen({navigation}) {
                         <TouchableOpacity style={styles.buttonAlt} onPress={onChangeHandler}>
                             <Text style={styles.buttonAltText}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
                         </TouchableOpacity>
-                        {isLogin && <TouchableOpacity style={styles.buttonAltKakao}>
-                            <Image source={require('../public/images/kakao.png')} style={styles.buttonImage} onPress={onKakaoHandler}></Image>
+                        {isLogin && <TouchableOpacity style={styles.buttonAltKakao} onPress={onKakaoHandler}>
+                            <Image source={require('../public/images/kakao.png')} style={styles.buttonImage}></Image>
                             <Text style={styles.buttonAltTextKG}>Kakao 로그인</Text>
                         </TouchableOpacity>}
                         {isLogin && <TouchableOpacity style={styles.buttonAltGoogle}>
