@@ -22,7 +22,6 @@ function useImages(images){
 function App() {
   const [imagesLoaded] = useImages([
     require('./public/images/kakao.png'),
-    require('./public/images/google.png'),
     require('./public/images/roomback.png'),
     require('./public/images/pikachu.gif'),
     require('./public/images/paili.gif'),
