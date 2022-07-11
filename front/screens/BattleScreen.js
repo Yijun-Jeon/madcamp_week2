@@ -116,7 +116,7 @@ function BattleScreen({ route, navigation }) {
             player1_hp && setPlayer1Hp(player1_hp);
             player2_hp && setPlayer2Hp(player2_hp);
         });
-    }, []);
+    });
 
 
     const checkGameOver = (hp) => {
@@ -220,6 +220,11 @@ function BattleScreen({ route, navigation }) {
     //         const skillTarget = skill[3];
     //     }
     // }
+    // if(users.length==2){
+    //     const my_hp = currentUser=='Player 1'?player1_hp:player2_hp
+    //     const enemy_pokemon = currentUser=='Player 1'?player2_pokemon:player1_pokemon
+    //     const enemy_hp = currentUser=='Player 1'?player2_hp:player1_hp
+    // }
 
     return (
         <View style={styles.container}>
@@ -231,7 +236,7 @@ function BattleScreen({ route, navigation }) {
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
                     {users.length==2
                     && <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> {player2_hp}/{maxHp} </Text>
+                        <Text style={styles.buttonText}> {currentUser=='Player 1'?player2_hp:player1_hp}/{maxHp} </Text>
                         </TouchableOpacity> }
                     {users.length==2
                     && <Image
@@ -241,7 +246,7 @@ function BattleScreen({ route, navigation }) {
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
                     <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
                     <TouchableOpacity style={styles.hpbar}>
-                        <Text style={styles.buttonText}> {player1_hp}/{maxHp} </Text>
+                        <Text style={styles.buttonText}> {currentUser=='Player 1'?player1_hp:player2_hp}/{maxHp} </Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
