@@ -2,6 +2,7 @@ import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Imag
 import React, { useState, useEffect} from 'react';
 import io from 'socket.io-client';
 import {Pokemon, pokemons} from '..//utils/character/Pokemon';
+import { checkType } from '../utils/character/Skills';
 
 const SOCKET_URL ='http://192.249.18.107:443';
 const blank_path = '../public/images/blank.png';
@@ -53,8 +54,6 @@ function BattleScreen({ route, navigation }) {
     const [p2_state, setPlayer2State] = useState([]);
     const [player1_pokemon, setPlayer1Pokemon] = useState([pokemon]);
     const [player2_pokemon, setPlayer2Pokemon] = useState([]);
-
-
 
     const skill1 = pokemon.skills[0].name;
     const skill2 = pokemon.skills[1].name;
@@ -131,7 +130,8 @@ function BattleScreen({ route, navigation }) {
         return [player_pokemon.skills[idx].name,
         player_pokemon.skills[idx].type,
         player_pokemon.skills[idx].damage,
-        player_pokemon.skills[idx].target];        
+        player_pokemon.skills[idx].target,
+        player_pokemon.skills[idx].skilltype];        
     }
 
     function onSkillPressedHandler(skill_idx){
@@ -173,9 +173,9 @@ function BattleScreen({ route, navigation }) {
         const skillName = skill[0];
         const skillType = skill[1];
         const skillDamage = skill[2];
-        const skillTarget = skill[3];
+        const skillTarget = skill[4];
 
-        var state = useSkill(skillType,skillDamage, player);
+        var state = useSkill(skillType,skillDamage, player,skillTarget);
         return state
     }
     
@@ -187,7 +187,7 @@ function BattleScreen({ route, navigation }) {
     },[gameOver])
 
 
-    function useSkill(skillType,skillDamage,player){
+    function useSkill(skillType,skillDamage,player,skillTarget){
         var p1_hp=0
         var p1_atk=0
         var p1_df=0
@@ -197,7 +197,7 @@ function BattleScreen({ route, navigation }) {
         if(player=='Player 1'){
             switch(skillType){
                 case '공격': 
-                    p2_hp = skillDamage*(1-p2_state[2]/100+p1_state[1]/100)>=p2_state[0] ? -p2_state[0] : -skillDamage*(1-p2_state[2]/100+p1_state[1]/100)
+                    p2_hp = skillDamage*checkType(skillTarget,player2_pokemon.type)*(1-p2_state[2]/100+p1_state[1]/100)>=p2_state[0] ? -p2_state[0] : -skillDamage*checkType(skillTarget,player2_pokemon.type)*(1-p2_state[2]/100+p1_state[1]/100)
                     break;
                 case '힐':
                     p1_hp = skillDamage+p1_state[0]>=player1_pokemon.health ? player1_pokemon.health-p1_state[0] : skillDamage
@@ -219,7 +219,7 @@ function BattleScreen({ route, navigation }) {
         else{
             switch(skillType){
                 case '공격': 
-                    p1_hp = skillDamage*(1-p1_state[2]/100+p2_state[1]/100)>=p1_state[0] ? -p1_state[0] : -skillDamage*(1-p1_state[2]/100+p2_state[1]/100)
+                    p1_hp = skillDamage*checkType(skillTarget,player1_pokemon.type)*(1-p1_state[2]/100+p2_state[1]/100)>=p1_state[0] ? -p1_state[0] : -skillDamage*checkType(skillTarget,player1_pokemon.type)*(1-p1_state[2]/100+p2_state[1]/100)
                     break;
                 case '힐':
                     p2_hp = skillDamage+p2_state[0]>=player2_pokemon.health ? player2_pokemon.health-p2_state[0] : skillDamage
@@ -299,19 +299,19 @@ function BattleScreen({ route, navigation }) {
 
             <View style={styles.interface}>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser} onPress={()=>onSkillPressedHandler(0)}>
+                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
                         <Text style={styles.buttonText}>{skill1}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser} onPress={()=>onSkillPressedHandler(1)}>
+                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(1)}>
                         <Text style={styles.buttonText}>{skill2}</Text>
                     </TouchableOpacity> 
                 </View>
                 
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser} onPress={()=>onSkillPressedHandler(2)}>
+                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(2)}>
                         <Text style={styles.buttonText}>{skill3}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser} onPress={()=>onSkillPressedHandler(3)}>
+                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(3)}>
                         <Text style={styles.buttonText}>{skill4}</Text>
                     </TouchableOpacity> 
                 </View>
