@@ -4,7 +4,6 @@ import io from 'socket.io-client';
 import { checkType } from '../utils/character/Skills';
 
 const SOCKET_URL ='http://192.249.18.107:443';
-const blank_path = '../public/images/blank.png';
 
 let socket;
 function BattleScreen({ route, navigation }) {
