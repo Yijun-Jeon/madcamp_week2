@@ -1,12 +1,10 @@
 import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Image,Button,ButtonGroup,ActivityIndicator} from 'react-native';
 import React, { useState, useEffect} from 'react';
 import io from 'socket.io-client';
-import {Pokemon, pokemons} from '..//utils/character/Pokemon';
 import { checkType } from '../utils/character/Skills';
 
 const SOCKET_URL ='http://192.249.18.107:443';
 const blank_path = '../public/images/blank.png';
-
 
 let socket;
 function BattleScreen({ route, navigation }) {
@@ -19,6 +17,7 @@ function BattleScreen({ route, navigation }) {
     const [roomFull, setRoomFull] = useState(false);
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState('');
+    const [skillpoint, setSkillPoint] = useState(1);
     
     useEffect(() => {
         const connectionOptions =  {
@@ -59,7 +58,6 @@ function BattleScreen({ route, navigation }) {
     const skill2 = pokemon.skills[1].name;
     const skill3 = pokemon.skills[2].name;
     const skill4 = pokemon.skills[3].name;
-
 
     useEffect(() => {
         socket.on("roomData", ({ users }) => {
@@ -122,8 +120,12 @@ function BattleScreen({ route, navigation }) {
         return hp<=0;
     }
     
-    const checkWinner = (hp, player) => {
-        return hp<=0 ? player : '';
+    const checkWinner = (hp) => {
+        return hp<=0 ? 'Win' : 'Lose';
+    }
+
+    const moveToRoom = () =>{
+        navigation.navigate("Room",{userName: route.params.userName});
     }
 
     function getSkillInfo(idx, player_pokemon){
@@ -165,6 +167,15 @@ function BattleScreen({ route, navigation }) {
                 })
             }   
         }
+        switch(skill_idx){
+            case 0:
+            case 1:
+                setSkillPoint(skillpoint+1);
+                break;
+            case 2:
+            case 3:
+                setSkillPoint(1);
+        }
     }
 
     const SkillHandler = (skill_idx, player) => {
@@ -178,14 +189,6 @@ function BattleScreen({ route, navigation }) {
         var state = useSkill(skillType,skillDamage, player,skillTarget);
         return state
     }
-    
-
-    useEffect(() =>{
-        if(gameOver){
-            navigation.navigate("End",{img: pokemon.imgfront, userName: userName, isWin: 'Win'});
-        }
-    },[gameOver])
-
 
     function useSkill(skillType,skillDamage,player,skillTarget){
         var p1_hp=0
@@ -197,7 +200,7 @@ function BattleScreen({ route, navigation }) {
         if(player=='Player 1'){
             switch(skillType){
                 case '공격': 
-                    p2_hp = skillDamage*checkType(skillTarget,player2_pokemon.type)*(1-p2_state[2]/100+p1_state[1]/100)>=p2_state[0] ? -p2_state[0] : -skillDamage*checkType(skillTarget,player2_pokemon.type)*(1-p2_state[2]/100+p1_state[1]/100)
+                    p2_hp = parseInt(skillDamage*checkType(skillTarget,player2_pokemon.type)*(1-p2_state[2]/100+p1_state[1]/100)>=p2_state[0] ? -p2_state[0] : -skillDamage*checkType(skillTarget,player2_pokemon.type)*(1-p2_state[2]/100+p1_state[1]/100))
                     break;
                 case '힐':
                     p1_hp = skillDamage+p1_state[0]>=player1_pokemon.health ? player1_pokemon.health-p1_state[0] : skillDamage
@@ -219,7 +222,7 @@ function BattleScreen({ route, navigation }) {
         else{
             switch(skillType){
                 case '공격': 
-                    p1_hp = skillDamage*checkType(skillTarget,player1_pokemon.type)*(1-p1_state[2]/100+p2_state[1]/100)>=p1_state[0] ? -p1_state[0] : -skillDamage*checkType(skillTarget,player1_pokemon.type)*(1-p1_state[2]/100+p2_state[1]/100)
+                    p1_hp = parseInt(skillDamage*checkType(skillTarget,player1_pokemon.type)*(1-p1_state[2]/100+p2_state[1]/100)>=p1_state[0] ? -p1_state[0] : -skillDamage*checkType(skillTarget,player1_pokemon.type)*(1-p1_state[2]/100+p2_state[1]/100))
                     break;
                 case '힐':
                     p2_hp = skillDamage+p2_state[0]>=player2_pokemon.health ? player2_pokemon.health-p2_state[0] : skillDamage
@@ -261,64 +264,89 @@ function BattleScreen({ route, navigation }) {
 
 
     
+    if(!gameOver){
+        return (
+            <View style={styles.container}>
+                <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
+                    <View style={{flex: 0.2, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>    
+                        <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
+                        <Text style={{}}>{roomCode}</Text>
+                    </View>
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
+                        {users.length==2 && 
+                        <TouchableOpacity style={styles.hpbar} disabled={true}>
+                            <Text style={styles.hpText}> {getEnemyState()[0]}/{getEnemyPokemon().health} </Text>
+                            <Image source={require('../public/images/attack.png')} style={styles.buttonImage}></Image>
+                            <Text style={styles.defenseText}> {getEnemyState()[1]}/{getEnemyState()[2]} </Text>
+                            <Text style>%</Text>
+                            <Image source={require('../public/images/defense.png')} style={styles.buttonImage}></Image>
+                        </TouchableOpacity> }
+                        {users.length==2 && 
+                        <Image
+                            style={styles.characterImage}
+                            source={getEnemyPokemon().imgbattlefront}/>}
+                    </View>
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
+                        <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
+                        <TouchableOpacity style={styles.hpbar} disabled={true}>
+                            {users.length==2 ?
+                            <Text style={styles.hpText}> {getMyState()[0]}/{pokemon.health} </Text> :
+                            <Text style={styles.hpText}> {pokemon.health}/{pokemon.health} </Text>
+                            }
+                            <Image source={require('../public/images/attack.png')} style={styles.buttonImage}></Image>
+                            {users.length==2 ?
+                            <Text style={styles.defenseText}> {getMyState()[1]}/{getMyState()[2]} </Text> :
+                            <Text style={styles.defenseText}> 0/0 </Text>
+                            }
+                            <Text style>%</Text>
+                            <Image source={require('../public/images/defense.png')} style={styles.buttonImage}></Image>
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={{fontSize: 15, color:'purple'}}>Skill Point: {skillpoint}</Text>
+                </ImageBackground>
 
-    return (
-        <View style={styles.container}>
-            <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
-                <View style={{flex: 0.2, alignItems:'center', justifyContent:'flex-end',paddingTop:10}}>    
-                    <Text style={{fontWeight:'bold', fontSize:15}}>Room Code</Text>
-                    <Text style={{}}>{roomCode}</Text>
-                </View>
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
-                    {users.length==2 && 
-                    <TouchableOpacity style={styles.hpbar} disabled={true}>
-                        <Text style={styles.hpText}> {getEnemyState()[0]}/{getEnemyPokemon().health} </Text>
-                        <Text style={styles.defenseText}> {getEnemyState()[1]}/{getEnemyState()[2]} </Text>
-                        <Text style>%</Text>
-                    </TouchableOpacity> }
-                    {users.length==2 && 
-                    <Image
-                        style={styles.characterImage}
-                        source={getEnemyPokemon().imgbattlefront}/>}
-                </View>
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
-                    <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
-                    <TouchableOpacity style={styles.hpbar} disabled={true}>
-                        {users.length==2 ?
-                        <Text style={styles.hpText}> {getMyState()[0]}/{pokemon.health} </Text> :
-                        <Text style={styles.hpText}> {pokemon.health}/{pokemon.health} </Text>
-                        }
-                        {users.length==2 ?
-                        <Text style={styles.defenseText}> {getMyState()[1]}/{getMyState()[2]} </Text> :
-                        <Text style={styles.defenseText}> 0/0 </Text>
-                        }
-                        <Text style>%</Text>
-                    </TouchableOpacity>
-                </View>
-            </ImageBackground>
-
-            <View style={styles.interface}>
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
-                        <Text style={styles.buttonText}>{skill1}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(1)}>
-                        <Text style={styles.buttonText}>{skill2}</Text>
-                    </TouchableOpacity> 
-                </View>
-                
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(2)}>
-                        <Text style={styles.buttonText}>{skill3}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(3)}>
-                        <Text style={styles.buttonText}>{skill4}</Text>
-                    </TouchableOpacity> 
+                <View style={styles.interface}>
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                        <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
+                            <Text style={styles.buttonText}>{skill1}</Text>
+                            <Text style={styles.spText}>SP:1</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(1)}>
+                            <Text style={styles.buttonText}>{skill2}</Text>
+                            <Text style={styles.spText}>SP:1</Text>
+                        </TouchableOpacity> 
+                    </View>
+                    
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                        <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2 || skillpoint < 3} onPress={()=>onSkillPressedHandler(2)}>
+                            <Text style={styles.buttonText}>{skill3}</Text>
+                            <Text style={styles.spText}>SP:3</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} disabled={turn!==currentUser || users.length < 2 || skillpoint < 5} onPress={()=>onSkillPressedHandler(3)}>
+                            <Text style={styles.buttonText}>{skill4}</Text>
+                            <Text style={styles.spText}>SP:5</Text>
+                        </TouchableOpacity> 
+                    </View>
                 </View>
             </View>
-        </View>
-    );
-  }
+        );
+    }else{
+        return(
+        <View style={{flex:1, alignItems:'center',justifyContent:'center'}}>
+            <View style={{marginBottom:0, flexDirection:'row'}}>
+                <Text style={{fontSize:80,}}>You</Text>
+                {checkWinner(getEnemyState()[0]) == 'Win' &&<Text style={{fontSize:80, marginLeft:30,color:'blue'}}>{checkWinner(getEnemyState()[0])}</Text>}
+                {checkWinner(getEnemyState()[0]) == 'Lose' &&<Text style={{fontSize:80, marginLeft:30,color:'red'}}>{checkWinner(getEnemyState()[0])}</Text>}
+            </View>
+            <Text style={{fontSize: 50, marginBottom:30}}>{userName}</Text>
+            <Image style={{}} source={pokemon.imgfront}></Image>
+
+            <TouchableOpacity style={{ width: '50%',marginTop:100, borderWidth: 2,borderRadius:50, height: 40,backgroundColor:'yellow', borderColor: 'red',justifyContent: 'center',alignItems: 'center'}}  onPress={moveToRoom}>
+                <Text style={{width: 50,height: 20,justifyContent: 'center',alignItems: 'center'}}>Restart</Text>
+            </TouchableOpacity>
+         </View>);
+    }
+}
 
   const styles = StyleSheet.create({
     container:{
@@ -342,6 +370,7 @@ function BattleScreen({ route, navigation }) {
         justifyContent: 'center',
         alignItems: 'center',
         margin: 5,
+        flexDirection:'row',
     },
     hpbar: {
         width: '50%',
@@ -355,13 +384,18 @@ function BattleScreen({ route, navigation }) {
     hpText: {
         color: 'black',
         fontSize: 16,
-        fontWeight: '400'
+        fontWeight: '400',
+        marginRight:5,
+    },
+    spText:{
+        color: 'white',
+        fontSize:12,
+        marginLeft:15,
     },
     defenseText: {
         color: 'black',
         fontSize: 16,
         fontWeight: '400',
-        marginLeft: 30,
     },
     buttonText: {
         color: 'white',
@@ -370,7 +404,11 @@ function BattleScreen({ route, navigation }) {
     },
     characterImage: {
         margin: 30
-    }
+    },
+    buttonImage:{
+        maxHeight:30,
+        maxWidth:30,
+    },
   }); 
 
   

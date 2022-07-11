@@ -61,7 +61,7 @@ class Pokemon{
 const pokemons = [];
 pokemons.push(new Pokemon('피카츄','전기',500,require('../../public/images/pikachu.gif'),require('../../public/images/pikachu_back.gif')
             ,require('../../public/images/pikachu_battle.gif'),require('../../public/images/pikachu_battle_back.gif')
-            ,[skills['몸통박치기'],skills['10만 볼트'],skills['100만 볼트'],skills['꼬리 흔들기']]))
+            ,[skills['몸통박치기'],skills['꼬리 흔들기'],skills['10만 볼트'],skills['100만 볼트']]))
   
 pokemons.push(new Pokemon('파이리','불꽃',400,require('../../public/images/paili.gif'),require('../../public/images/paili_back.gif')
 ,require('../../public/images/paili_battle.gif'),require('../../public/images/paili_battle_back.gif')
@@ -77,7 +77,7 @@ pokemons.push(new Pokemon('이상해씨','풀',400,require('../../public/images/
 
 pokemons.push(new Pokemon('뮤','에스퍼',500,require('../../public/images/myu.gif'),require('../../public/images/myu_back.gif')
 ,require('../../public/images/myu_battle.gif'),require('../../public/images/myu_battle_back.gif')
-,[skills['몸통박치기'],skills['사이코키네시스'],skills['빛의 장막'],skills['수면']]))
+,[skills['몸통박치기'],skills['빛의 장막'],skills['사이코키네시스'],skills['수면']]))
 
 let playerParty = [];
 let enemyParty = [];

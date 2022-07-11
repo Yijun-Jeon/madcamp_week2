@@ -92,7 +92,7 @@ function AuthScreen({navigation}) {
     }
 
     return (
-        <ImageBackground source={require('../public/images/gradient-back.jpeg')} style={styles.image}>
+        <ImageBackground source={require('../public/images/roomback.png')} style={styles.image}>
             <View style={styles.card}>
                 <Text style={styles.heading}>{isLogin ? 'Login' : 'Signup'}</Text>
                 <View style={styles.form}>
@@ -110,10 +110,6 @@ function AuthScreen({navigation}) {
                         {isLogin && <TouchableOpacity style={styles.buttonAltKakao}>
                             <Image source={require('../public/images/kakao.png')} style={styles.buttonImage} onPress={onKakaoHandler}></Image>
                             <Text style={styles.buttonAltTextKG}>Kakao 로그인</Text>
-                        </TouchableOpacity>}
-                        {isLogin && <TouchableOpacity style={styles.buttonAltGoogle}>
-                        <Image source={require('../public/images/google.png')} style={styles.buttonImage}></Image>
-                            <Text style={styles.buttonAltTextKG}>Google 로그인</Text>
                         </TouchableOpacity>}
                     </View>   
                 </View>
@@ -134,7 +130,7 @@ const styles = StyleSheet.create({
         width: '80%',
         marginTop: '40%',
         borderRadius: 20,
-        maxHeight: 450,
+        maxHeight: 400,
         paddingBottom: '30%',
     },
     heading: {
