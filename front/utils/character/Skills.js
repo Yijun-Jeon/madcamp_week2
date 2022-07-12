@@ -2,21 +2,28 @@ let skills = {
     '몸통박치기': {
         name: '몸통박치기',
 		type: '공격',
-        damage: 20,
+        damage: 30,
         target: 'enemy',
 		skilltype: '노말',
     },
-    '10만 볼트': {
-        name: '10만 볼트',
+	'할퀴기': {
+        name: '할퀴기',
 		type: '공격',
-        damage: 50,
+        damage: 35,
         target: 'enemy',
+		skilltype: '노말',
+    },
+    '방전': {
+        name: '방전',
+		type: '공버프',
+        damage: 20,
+        target: 'self',
 		skilltype: '전기',
 	},
 	'100만 볼트': {
 		name: '100만 볼트',
 		type: '공격',
-		damage: 100,
+		damage: 110,
 		target: 'enemy',
 		skilltype: '전기',
 	},
@@ -37,49 +44,49 @@ let skills = {
 	'화염방사': {
 		name: '화염방사',
 		type: '공격',
-		damage: 50,
+		damage: 80,
 		target: 'enemy',
 		skilltype: '불꽃',
 	},
 	'불대문자': {
 		name: '불대문자',
 		type: '공격',
-		damage: 100,
+		damage: 150,
 		target: 'enemy',
 		skilltype: '불꽃',
 	},
 	'물대포': {
 		name: '물대포',
 		type: '공격',
-		damage: 20,
+		damage: 35,
 		target: 'enemy',
 		skilltype: '물',
 	},
-	'아쿠아테일': {
-		name: '아쿠아테일',
+	'물기': {
+		name: '물기',
 		type: '공격',
-		damage: 50,
+		damage: 75,
 		target: 'enemy',
-		skilltype: '물',
+		skilltype: '악',
 	},
 	'하이드로펌프': {
 		name: '하이드로펌프',
 		type: '공격',
-		damage: 100,
+		damage: 150,
 		target: 'enemy',
 		skilltype: '물',
 	},
 	'매지컬리프': {
 		name: '매지컬리프',
 		type: '공격',
-		damage: 50,
+		damage: 75,
 		target: 'enemy',
 		skilltype: '풀',
 	},
 	'지진': {
 		name: '지진',
 		type: '공격',
-		damage: 100,
+		damage: 125,
 		target: 'enemy',
 		skilltype: '땅',
 	},
@@ -97,10 +104,10 @@ let skills = {
 		target: 'self',
 		skilltype: '노말',
 	},
-	'수면': {
-		name: '수면',
+	'잠자기': {
+		name: '잠자기',
 		type: '힐',
-		damage: 100,
+		damage: 70,
 		target: 'self',
 		skilltype: '노말',
 	}
@@ -163,6 +170,13 @@ function checkType(type1, type2){
 					return 0.5;
 				case '불꽃':
 				case '전기':
+					return 2;
+				default:
+					return 1;
+			}
+		case '악':
+			switch(type2){
+				case '에스퍼':
 					return 2;
 				default:
 					return 1;

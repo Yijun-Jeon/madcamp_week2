@@ -61,15 +61,15 @@ class Pokemon{
 const pokemons = [];
 pokemons.push(new Pokemon('피카츄','전기',330,require('../../public/images/pikachu.gif'),require('../../public/images/pikachu_back.gif')
             ,require('../../public/images/pikachu_battle.gif'),require('../../public/images/pikachu_battle_back.gif')
-            ,[skills['몸통박치기'],skills['꼬리 흔들기'],skills['10만 볼트'],skills['100만 볼트']]))
+            ,[skills['몸통박치기'],skills['꼬리 흔들기'],skills['방전'],skills['100만 볼트']]))
   
 pokemons.push(new Pokemon('파이리','불꽃',330,require('../../public/images/paili.gif'),require('../../public/images/paili_back.gif')
 ,require('../../public/images/paili_battle.gif'),require('../../public/images/paili_battle_back.gif')
-,[skills['몸통박치기'],skills['울음소리'],skills['화염방사'],skills['불대문자']]))
+,[skills['할퀴기'],skills['울음소리'],skills['화염방사'],skills['불대문자']]))
 
 pokemons.push(new Pokemon('꼬부기','물',300,require('../../public/images/kkobugi.gif'),require('../../public/images/kkobugi_back.gif')
 ,require('../../public/images/kkobugi_battle.gif'),require('../../public/images/kkobugi_battle_back.gif')
-,[skills['몸통박치기'],skills['물대포'],skills['아쿠아테일'],skills['하이드로펌프']]))
+,[skills['몸통박치기'],skills['물대포'],skills['물기'],skills['하이드로펌프']]))
 
 pokemons.push(new Pokemon('이상해씨','풀',350,require('../../public/images/isanghaessi.gif'),require('../../public/images/isanghaessi_back.gif')
 ,require('../../public/images/isanghaessi_battle.gif'),require('../../public/images/isanghaessi_battle_back.gif')
@@ -77,7 +77,7 @@ pokemons.push(new Pokemon('이상해씨','풀',350,require('../../public/images/
 
 pokemons.push(new Pokemon('뮤','에스퍼',280,require('../../public/images/myu.gif'),require('../../public/images/myu_back.gif')
 ,require('../../public/images/myu_battle.gif'),require('../../public/images/myu_battle_back.gif')
-,[skills['몸통박치기'],skills['빛의 장막'],skills['사이코키네시스'],skills['수면']]))
+,[skills['할퀴기'],skills['빛의 장막'],skills['사이코키네시스'],skills['잠자기']]))
 
 let playerParty = [];
 let enemyParty = [];

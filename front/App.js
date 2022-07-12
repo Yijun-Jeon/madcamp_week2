@@ -27,6 +27,8 @@ function App() {
     require('./public/images/paili.gif'),
     require('./public/images/battleback.png'),
     require('./public/images/gradient-back.jpeg'),
+    require('./public/images/skillstatus.png'),
+    require('./public/images/battlestatus.png'),
     require('./public/images/isanghaessi.gif'),
     require('./public/images/isanghaessi_back.gif'),
     require('./public/images/isanghaessi_battle_back.gif'),

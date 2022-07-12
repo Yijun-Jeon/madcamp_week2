@@ -20,8 +20,6 @@ function BattleScreen({ route, navigation }) {
     const [skillpoint, setSkillPoint] = useState(1);
     const [skilltext, setSkillText] = useState("");
     const [typetext, setTypeText] = useState("");
-    const [onevent, setOnEvent] = useState(false);
-    const [damaged, setDamaged] = useState(false);
     
     useEffect(() => {
         const connectionOptions =  {
@@ -49,6 +47,11 @@ function BattleScreen({ route, navigation }) {
     const [gameOver, setGameOver] = useState(false);
     const [winner, setWinner] = useState('');
     const [turn, setTurn] = useState('Player 1');
+    const [onevent, setOnEvent] = useState(false);
+    const [damaged, setDamaged] = useState(false);
+    const [damaged_player, setDamagedPlayer] = useState([]);
+    const [buffed, setBuffed] = useState(false);
+    const [buffed_player, setBuffedPlayer] = useState([]);
     // const [player1_hp, setPlayer1Hp] = useState([]);
     // const [player2_hp, setPlayer2Hp] = useState([]);
     // const [player1_defense, setPlayer1Defense] = useState([]);
@@ -96,6 +99,8 @@ function BattleScreen({ route, navigation }) {
         socket.on('reupdate',()=>{
             setOnEvent(false);
             setDamaged(false);
+            setDamagedPlayer('');
+            setBuffed()
         })
     }
 
@@ -114,7 +119,7 @@ function BattleScreen({ route, navigation }) {
         });
 
 
-        socket.on('updateGameState', ({ gameOver, winner, turn, p1_state, p2_state, skilltext, typetext}) => {
+        socket.on('updateGameState', ({ gameOver, winner, turn, p1_state, p2_state, skilltext, typetext, damaged, damaged_player}) => {
             gameOver && setGameOver(gameOver);
             winner && setWinner(winner);
             turn && setTurn(turn);
@@ -126,6 +131,8 @@ function BattleScreen({ route, navigation }) {
             p2_state && setPlayer2State(p2_state)
             skilltext && setSkillText(skilltext)
             typetext && setTypeText(typetext)
+            damaged && setDamaged(damaged)
+            damaged_player && setDamagedPlayer(damaged_player)
             setOnEvent(true)
         });
     },[]);
@@ -163,9 +170,14 @@ function BattleScreen({ route, navigation }) {
                     p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
                     p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]],
                     skilltext: delta[6],
-                    typetext: delta[7]
+                    typetext: delta[7],
+                    damaged: delta[3]<0 ? true : false,
+                    damaged_player: delta[3]<0 ? 'Player 2' : '',
                 })
-                if(delta[3]<0) setDamaged(true);
+                if(delta[3]<0){
+                    setDamagedPlayer('Player 2')
+                    setDamaged(true);
+                }
             }
             else{
                 socket.emit('updateGameState', {
@@ -175,19 +187,27 @@ function BattleScreen({ route, navigation }) {
                     p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
                     p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]],
                     skilltext: delta[6],
-                    typetext: delta[7]
+                    typetext: delta[7],
+                    damaged: delta[0]<0 ? true : false,
+                    damaged_player: delta[0]<0 ? 'Player 1' : '',
                 })
-                if(delta[0]<0) setDamaged(true);
+                if(delta[0]<0){
+                    setDamagedPlayer('Player 1')
+                    setDamaged(true);
+                }
             }   
         }
         switch(skill_idx){
             case 0:
+                break;
             case 1:
                 setSkillPoint(skillpoint+1);
                 break;
             case 2:
+                setSkillPoint(skillpoint-1);
+                break;
             case 3:
-                setSkillPoint(1);
+                setSkillPoint(skillpoint-3);
         }
     }
 
@@ -227,18 +247,23 @@ function BattleScreen({ route, navigation }) {
                     break;
                 case '힐':
                     p1_hp = skillDamage+p1_state[0]>=player1_pokemon.health ? player1_pokemon.health-p1_state[0] : skillDamage
+                    typetext = player1_pokemon.name+'의 체력이 증가했다!'
                     break;
                 case '공디버프':
                     p2_atk = -skillDamage
+                    typetext = player2_pokemon.name+'의 공격력이 감소했다!'
                     break;
                 case '공버프':
                     p1_atk = skillDamage
+                    typetext = player1_pokemon.name+'의 공격력이 증가했다!'
                     break;
                 case '방디버프':
                     p2_df = -skillDamage
+                    typetext = player2_pokemon.name+'의 방어력이 감소했다!'
                     break;
                 case '방버프':
                     p1_df = skillDamage
+                    typetext = player1_pokemon.name+'의 방어력이 증가했다!'
                     break;
             }
         }
@@ -255,18 +280,23 @@ function BattleScreen({ route, navigation }) {
                     break;
                 case '힐':
                     p2_hp = skillDamage+p2_state[0]>=player2_pokemon.health ? player2_pokemon.health-p2_state[0] : skillDamage
+                    typetext = player2_pokemon.name+'의 체력이 증가했다!'
                     break;
                 case '공디버프':
                     p1_atk = -skillDamage
+                    typetext = player1_pokemon.name+'의 공격력이 감소했다!'
                     break;
                 case '공버프':
                     p2_atk = skillDamage
+                    typetext = player2_pokemon.name+'의 공격력이 증가했다!'
                     break;
                 case '방디버프':
                     p1_df = -skillDamage
+                    typetext = player1_pokemon.name+'의 방어력이 감소했다!'
                     break;
                 case '방버프':
                     p2_df = skillDamage
+                    typetext = player2_pokemon.name+'의 방어력이 증가했다!'
                     break;
             }
         }
@@ -292,9 +322,9 @@ function BattleScreen({ route, navigation }) {
     }
 
     function getEnemyImage(){
-        if(damaged && turn != currentUser){
+        if(damaged && damaged_player && currentUser!==damaged_player){
             return(
-                <Blink duration={50}>
+                <Blink duration={100}>
                     <Image style={styles.characterImage} source={getEnemyPokemon().imgbattlefront}/>
                 </Blink>
             );
@@ -305,9 +335,9 @@ function BattleScreen({ route, navigation }) {
         }
     }
     function getMyImage(){
-        if(damaged && turn == currentUser){
+        if(damaged && damaged_player && currentUser===damaged_player){
             return(
-                <Blink duration={50}>
+                <Blink duration={100}>
                     <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
                 </Blink>
             );
@@ -317,23 +347,19 @@ function BattleScreen({ route, navigation }) {
             );
         }
     }
+
+
     function getMyHp(){
-        if(damaged && turn == currentUser){
-            return(
-                <Text style={[styles.hpText,{color:'red'}]}> {getMyState()[0]}</Text>
-            );
-        }else{
-            return(
-                 <Text style={styles.hpText}> {getMyState()[0]}</Text>
-            );
-        } 
+        return(
+                <Text style={styles.hpText}> {getMyState()[0]}</Text>
+        );
     }
 
     function getTurnPokemonName(){
         return turn=="Player 1"?player2_pokemon.name:player1_pokemon.name;
     }
 
-    function getTextBox(){
+    function getTopTextBox(){
         if(users.length < 2){
             if(turn!==currentUser){
                 return "상대방이 나갔습니다. 방을 다시 생성해 주십시오"
@@ -353,7 +379,7 @@ function BattleScreen({ route, navigation }) {
         }
         else{
             if(onevent)
-                return (turn!==currentUser?"":"상대 ")+skilltext+"! "+typetext;
+                return (turn!==currentUser?"":"상대 ")+skilltext+"!";
             else{
                 if(turn!==currentUser){
                     return "상대방의 선택을 기다리는 중입니다"
@@ -365,16 +391,32 @@ function BattleScreen({ route, navigation }) {
         }
     }
 
-    
+    function getBottomTextBox(){
+        if(users.length < 2){
+            return "";
+        }
+        else if(JSON.stringify(p1_state)===JSON.stringify([users[0].pokemon.health, 0, 0]) && 
+        JSON.stringify(p2_state)===JSON.stringify([users[1].pokemon.health, 0, 0])){
+            return "";
+        }
+        else{
+            if(onevent)
+                return typetext;
+            else{
+                return "";
+            }
+        }
+    }
+
     if(!gameOver){
         return (
             <View style={styles.container}>
                 <ImageBackground style={styles.battle} source={require('../public/images/battleback.png')} resizeMode={"stretch"}>
-                    <View style={{flex: 0.35, alignItems:'flex-start', justifyContent:'flex-end',marginTop:13,marginLeft:'5%'}}>    
+                    <View style={{flex: 0.5, alignItems:'flex-start', justifyContent:'flex-end',marginTop:13,marginLeft:'5%'}}>    
                         <Image source={require('../public/images/roomcode.png')}></Image>
                         <Text style={{fontSize:15, color:'black',fontWeight:'bold',marginLeft:'7%'}}>{route.params.roomCode}</Text>
                     </View>
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
+                    <View style={{flex: 0.5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:20}}>
                         {users.length==2 && 
                         <TouchableOpacity style={styles.hpbar} disabled={true}>
                             <Text style={styles.hpText}> {getEnemyState()[0]}/{getEnemyPokemon().health} </Text>
@@ -385,7 +427,7 @@ function BattleScreen({ route, navigation }) {
                         </TouchableOpacity> }
                         {users.length==2 && getEnemyImage()} 
                     </View>
-                    <View style={{flex: 0.6}}>
+                    <View style={{flex: 0.75}}>
                     </View> 
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
                         {getMyImage()}
@@ -404,37 +446,76 @@ function BattleScreen({ route, navigation }) {
                     <Text style={{fontSize: 20, color:'black',fontWeight:'bold'}}>Skill Point: {skillpoint}</Text>
                 </ImageBackground>
 
-                <View style={{fontSize: 20, backgroundColor: "white", flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text> {getTextBox()} </Text>
-                </View> 
+                <ImageBackground style={{flex: 0.8, backgroundColor: "white", justifyContent: 'center'}} source={require('../public/images/battlestatus.png')} resizeMode={"stretch"}>
+                    <Text style={{flex: 0.7}}> </Text>
+                    <Text style={{flex: 1, fontSize: 15, marginLeft: 25}}> {getTopTextBox()} </Text>
+                    <Text style={{flex: 0.5}}> </Text>
+                    <Text style={{flex: 1, fontSize: 15, marginLeft: 25}}> {getBottomTextBox()} </Text>
+                    <Text style={{flex: 0.7}}> </Text>
+                </ImageBackground>
+                {/* <View style={{flex: 0.8, backgroundColor: "white", justifyContent: 'center', marginLeft: 20}}>
+                    <Text style={{flex: 0.5}}> </Text>
+                    <Text style={{flex: 1, fontSize: 15}}> {getTopTextBox()} </Text>
+                    <Text style={{flex: 0.5}}> </Text>
+                    <Text style={{flex: 1, fontSize: 15}}> {getBottomTextBox()} </Text>
+                    <Text style={{flex: 0.5}}> </Text>
+                </View>  */}
                 
                 {(users.length < 2 || turn!==currentUser) ? 
-                <View style={[styles.interface, {alignItems: 'center', justifyContent: 'center'}]}>
+                <ImageBackground style={[styles.interface, {alignItems: 'center', justifyContent: 'center'}]} source={require('../public/images/skillstatus.png')} resizeMode={"cover"}>
                     <ActivityIndicator size="large" color="#000000" />
-                </View> : 
-                <View style={styles.interface}>
+                </ImageBackground>
+                // <View style={[styles.interface, {alignItems: 'center', justifyContent: 'center'}]}>
+                //     <ActivityIndicator size="large" color="#000000" />
+                // </View> 
+                : 
+                <ImageBackground style={[styles.interface, {alignItems: 'center', justifyContent: 'center'}]} source={require('../public/images/skillstatus.png')} resizeMode={"cover"}>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                        <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
-                            <Text style={styles.buttonText}>{skill1}</Text>
-                            <Text style={styles.spText}>SP:1</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(1)}>
-                            <Text style={styles.buttonText}>{skill2}</Text>
-                            <Text style={styles.spText}>SP:1</Text>
-                        </TouchableOpacity> 
-                    </View>
+                         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
+                             <Text style={styles.buttonText}>{skill1}</Text>
+                             <Text style={styles.spText}>SP:0</Text>
+                         </TouchableOpacity>
+                         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 1} onPress={()=>onSkillPressedHandler(1)}>
+                             <Text style={styles.buttonText}>{skill2}</Text>
+                             <Text style={styles.spText}>SP:1</Text>
+                         </TouchableOpacity> 
+                     </View>
         
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                        <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 3} onPress={()=>onSkillPressedHandler(2)}>
-                            <Text style={styles.buttonText}>{skill3}</Text>
-                            <Text style={styles.spText}>SP:3</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 5} onPress={()=>onSkillPressedHandler(3)}>
-                            <Text style={styles.buttonText}>{skill4}</Text>
-                            <Text style={styles.spText}>SP:5</Text>
-                        </TouchableOpacity> 
-                    </View>
-                </View>}
+                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 3} onPress={()=>onSkillPressedHandler(2)}>
+                             <Text style={styles.buttonText}>{skill3}</Text>
+                             <Text style={styles.spText}>SP:3</Text>
+                         </TouchableOpacity>
+                         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 5} onPress={()=>onSkillPressedHandler(3)}>
+                             <Text style={styles.buttonText}>{skill4}</Text>
+                             <Text style={styles.spText}>SP:5</Text>
+                         </TouchableOpacity> 
+                     </View>
+                </ImageBackground>
+                // <View style={styles.interface}>
+                //     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                //         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
+                //             <Text style={styles.buttonText}>{skill1}</Text>
+                //             <Text style={styles.spText}>SP:1</Text>
+                //         </TouchableOpacity>
+                //         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(1)}>
+                //             <Text style={styles.buttonText}>{skill2}</Text>
+                //             <Text style={styles.spText}>SP:1</Text>
+                //         </TouchableOpacity> 
+                //     </View>
+        
+                //     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                //         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 3} onPress={()=>onSkillPressedHandler(2)}>
+                //             <Text style={styles.buttonText}>{skill3}</Text>
+                //             <Text style={styles.spText}>SP:3</Text>
+                //         </TouchableOpacity>
+                //         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 5} onPress={()=>onSkillPressedHandler(3)}>
+                //             <Text style={styles.buttonText}>{skill4}</Text>
+                //             <Text style={styles.spText}>SP:5</Text>
+                //         </TouchableOpacity> 
+                //     </View>
+                // </View>
+                }
             </View>
         );
     }else{
@@ -466,7 +547,7 @@ function BattleScreen({ route, navigation }) {
         height: null,    
     },
     interface:{
-        flex: 1,
+        flex: 2,
         backgroundColor: '#7FCDD7',
     },
     button: {
