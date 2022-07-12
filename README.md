@@ -5,11 +5,12 @@
 * [Developer Information](#developer-information)
 * [Development Environment](#development-environment)
 * [Application Information](#application-information)
-  * [0. Login & SignUp](#0-login--signup)
-  * [1. Tab1 - RoomScreen](#1-tab1---roomscreen)
-  * [2. Tab2 - Gallery](#2-tab2---gallery)
-  * [3. Tab3 - Direct Message](#3-tab3---direct-message)
-  * [4. Future Work(언젠가)](#4-future-work언젠가)
+  * [0. Loding & Login & SignUp](#0-loding--login--signup)
+  * [1. RoomScreen](#1-roomscreen)
+  * [2. SelectScreen](#2-selectscreen)
+  * [3. BattleScreen](#3-battlescreen)
+  * [4. EndScreen](#4-endscreen)
+  * [5. Future Work(언젠가)](#5-future-work언젠가)
 ***
 
 # Project Summary
@@ -99,7 +100,7 @@
 * Socket을 사용해 client와 server의 통신을 구현하였습니다.
 * Blink를 import하여 에니메이션을 구현하였습니다.
 
-## 4.EndScreen
+## 4. EndScreen
 
 <img src="https://user-images.githubusercontent.com/89140546/178483278-ddd9934e-433b-45e9-a7ba-4687eb74166c.jpg" width="200" height="400"> 
 
