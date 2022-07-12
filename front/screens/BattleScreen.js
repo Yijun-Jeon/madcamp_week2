@@ -2,6 +2,7 @@ import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Imag
 import React, { useState, useEffect} from 'react';
 import io from 'socket.io-client';
 import { checkType } from '../utils/character/Skills';
+import Blink from './Blink'
 
 const SOCKET_URL ='http://192.249.18.107:443';
 
@@ -17,6 +18,7 @@ function BattleScreen({ route, navigation }) {
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState('');
     const [skillpoint, setSkillPoint] = useState(1);
+    const [damaged, setDamaged] = useState(false);
     
     useEffect(() => {
         const connectionOptions =  {
@@ -254,6 +256,19 @@ function BattleScreen({ route, navigation }) {
         return currentUser=='Player 1'?p2_state:p1_state;
     }
 
+    function getImage(){
+        if(damaged){
+            return(
+                <Blink duration={50}>
+                    <Image style={styles.characterImage} source={getEnemyPokemon().imgbattlefront}/>
+                </Blink>
+            );
+        }else{
+            return(
+                <Image style={styles.characterImage} source={getEnemyPokemon().imgbattlefront}/>
+            );
+        }
+    }
 
     
     if(!gameOver){
@@ -273,13 +288,13 @@ function BattleScreen({ route, navigation }) {
                             <Text style>%</Text>
                             <Image source={require('../public/images/defense.png')} style={styles.buttonImage}></Image>
                         </TouchableOpacity> }
-                        {users.length==2 && 
-                        <Image
-                            style={styles.characterImage}
-                            source={getEnemyPokemon().imgbattlefront}/>}
+                        {users.length==2 && getImage()} 
                     </View>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
-                        <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
+                        {damaged && <Blink duration={50}>
+                            <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
+                        </Blink>}
+                        {!damaged && <Image style={styles.characterImage} source={pokemon.imgbattleback}/>}
                         <TouchableOpacity style={styles.hpbar} disabled={true}>
                             {users.length==2 ?
                             <Text style={styles.hpText}> {getMyState()[0]}/{pokemon.health} </Text> :
