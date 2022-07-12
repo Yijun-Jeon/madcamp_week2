@@ -28,7 +28,7 @@
 
 # Development Environment
 * OS: Android & IOS
-* Language: JavaSkript
+* Language: JavaScript
 * Framework: React Native (Expo)
 * Server: Node.js, Express, Socket.io, Axios
 * Database: MySQL, Sequelize
