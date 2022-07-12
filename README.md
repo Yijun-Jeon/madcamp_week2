@@ -37,7 +37,7 @@
 # Application Information
 ## 0. Loding & Login & SignUp
 
-<img src="https://user-images.githubusercontent.com/89140546/178481682-cdc9b49d-1ae3-4772-af0b-73e135be01fc.jpg" width="200" height="400"> 
+<img src="https://user-images.githubusercontent.com/89140546/178481682-cdc9b49d-1ae3-4772-af0b-73e135be01fc.jpg" width="200" height="400"> <img src="https://user-images.githubusercontent.com/89140546/178481705-bdda08f3-e06d-42b7-b6cf-ed3cea4c4731.jpg" width="200" height="400"> <img src="https://user-images.githubusercontent.com/89140546/178481706-0c754d17-279f-4c13-9a75-e01caa4d7660.jpg" width="200" height="400"> 
 ### Major Features
 * 이미지 데이터를 미리 받아오는 동안 로딩 이미지가 표시됩니다.
 * 이메일과 비밀번호를 입력받아 데이터 베이스의 사용자 정보와 비교흫 통해 로그인을 할 수 있습니다
@@ -110,7 +110,6 @@
 ### Technology Used
 * senderID와 userID를 통해 각 사용자에 해당하는 메세지들을 받아올 수 있습니다
 * ValueEventListener을 통해 변경사항이 생길 시 창을 업데이트 해줍니다
-<img src="https://user-images.githubusercontent.com/68576681/177285932-e0970a50-c7d5-4964-8d1a-18ad9e2a59d8.png" height="400">
 
 
 ## 5. Future Work(언젠가)
