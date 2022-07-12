@@ -6,7 +6,7 @@
 * [Development Environment](#development-environment)
 * [Application Information](#application-information)
   * [0. Login & SignUp](#0-login--signup)
-  * [1. Tab1 - Contact](#1-tab1---contact)
+  * [1. Tab1 - RoomScreen](#1-tab1---roomscreen)
   * [2. Tab2 - Gallery](#2-tab2---gallery)
   * [3. Tab3 - Direct Message](#3-tab3---direct-message)
   * [4. Future Work(언젠가)](#4-future-work언젠가)
@@ -28,9 +28,9 @@
 # Development Environment
 * OS: Android & IOS
 * Language: JavaSkript
-* Framework: React Native
-* Server: Node.js
-* Database: MySQL
+* Framework: React Native (Expo)
+* Server: Node.js, Express, Socket.io, Axios
+* Database: MySQL, Sequelize
 * Target Device: All device
 ***
 
@@ -48,6 +48,7 @@
 ### Technology Used
 * MySQL 를 사용하여 모든 유저들의 정보를 서버에 저장해놓았습니다
 * 따라서 다른 기기에서도 동일한 ID로 로그인 할 수 있습니다
+* 카카오톡 로그인의 경우 api key와 axios를 사용해 서버와 통신을 합니다
 <img src="https://user-images.githubusercontent.com/68576681/177285926-a6c1b166-fa71-46ab-b383-7c00b57a0018.png" height="400">
 
 ## 1. RoomScreen
@@ -96,11 +97,8 @@
 * 현재 체력이 0 이하로 되면 게임 종료가 되고 승패가 결정됩니다.
 
 ### Technology Used
-* Recycler View를 이용해 사용자 정보를 보여줍니다
-* Firebase를 통해 사용자들이 보낸 메세지들을 서버에 모두 저장합니다
-* senderID와 userID를 통해 각 사용자에 해당하는 메세지들을 받아올 수 있습니다
-* ValueEventListener을 통해 변경사항이 생길 시 창을 업데이트 해줍니다
-<img src="https://user-images.githubusercontent.com/68576681/177285932-e0970a50-c7d5-4964-8d1a-18ad9e2a59d8.png" height="400">
+* Socket을 사용해 client와 server의 통신을 구현하였습니다.
+* Blink를 import하여 에니메이션을 구현하였습니다.
 
 ## 4.EndScreen
 
