@@ -20,8 +20,6 @@ function BattleScreen({ route, navigation }) {
     const [skillpoint, setSkillPoint] = useState(1);
     const [skilltext, setSkillText] = useState("");
     const [typetext, setTypeText] = useState("");
-    const [onevent, setOnEvent] = useState(false);
-    const [damaged, setDamaged] = useState(false);
     
     useEffect(() => {
         const connectionOptions =  {
@@ -49,6 +47,11 @@ function BattleScreen({ route, navigation }) {
     const [gameOver, setGameOver] = useState(false);
     const [winner, setWinner] = useState('');
     const [turn, setTurn] = useState('Player 1');
+    const [onevent, setOnEvent] = useState(false);
+    const [damaged, setDamaged] = useState(false);
+    const [damaged_player, setDamagedPlayer] = useState([]);
+    const [buffed, setBuffed] = useState(false);
+    const [buffed_player, setBuffedPlayer] = useState([]);
     // const [player1_hp, setPlayer1Hp] = useState([]);
     // const [player2_hp, setPlayer2Hp] = useState([]);
     // const [player1_defense, setPlayer1Defense] = useState([]);
@@ -96,6 +99,8 @@ function BattleScreen({ route, navigation }) {
         socket.on('reupdate',()=>{
             setOnEvent(false);
             setDamaged(false);
+            setDamagedPlayer('');
+            setBuffed()
         })
     }
 
@@ -114,7 +119,7 @@ function BattleScreen({ route, navigation }) {
         });
 
 
-        socket.on('updateGameState', ({ gameOver, winner, turn, p1_state, p2_state, skilltext, typetext}) => {
+        socket.on('updateGameState', ({ gameOver, winner, turn, p1_state, p2_state, skilltext, typetext, damaged, damaged_player}) => {
             gameOver && setGameOver(gameOver);
             winner && setWinner(winner);
             turn && setTurn(turn);
@@ -126,6 +131,8 @@ function BattleScreen({ route, navigation }) {
             p2_state && setPlayer2State(p2_state)
             skilltext && setSkillText(skilltext)
             typetext && setTypeText(typetext)
+            damaged && setDamaged(damaged)
+            damaged_player && setDamagedPlayer(damaged_player)
             setOnEvent(true)
         });
     },[]);
@@ -163,9 +170,14 @@ function BattleScreen({ route, navigation }) {
                     p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
                     p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]],
                     skilltext: delta[6],
-                    typetext: delta[7]
+                    typetext: delta[7],
+                    damaged: delta[3]<0 ? true : false,
+                    damaged_player: delta[3]<0 ? 'Player 2' : '',
                 })
-                if(delta[3]<0) setDamaged(true);
+                if(delta[3]<0){
+                    setDamagedPlayer('Player 2')
+                    setDamaged(true);
+                }
             }
             else{
                 socket.emit('updateGameState', {
@@ -175,19 +187,27 @@ function BattleScreen({ route, navigation }) {
                     p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
                     p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]],
                     skilltext: delta[6],
-                    typetext: delta[7]
+                    typetext: delta[7],
+                    damaged: delta[0]<0 ? true : false,
+                    damaged_player: delta[0]<0 ? 'Player 1' : '',
                 })
-                if(delta[0]<0) setDamaged(true);
+                if(delta[0]<0){
+                    setDamagedPlayer('Player 1')
+                    setDamaged(true);
+                }
             }   
         }
         switch(skill_idx){
             case 0:
+                break;
             case 1:
                 setSkillPoint(skillpoint+1);
                 break;
             case 2:
+                setSkillPoint(skillpoint-1);
+                break;
             case 3:
-                setSkillPoint(1);
+                setSkillPoint(skillpoint-3);
         }
     }
 
@@ -276,7 +296,7 @@ function BattleScreen({ route, navigation }) {
                     break;
                 case '방버프':
                     p2_df = skillDamage
-                    typetext = player2_pokemon.name+'의 방어력 증가했다!'
+                    typetext = player2_pokemon.name+'의 방어력이 증가했다!'
                     break;
             }
         }
@@ -302,7 +322,7 @@ function BattleScreen({ route, navigation }) {
     }
 
     function getEnemyImage(){
-        if(damaged && turn != currentUser){
+        if(damaged && damaged_player && currentUser!==damaged_player){
             return(
                 <Blink duration={100}>
                     <Image style={styles.characterImage} source={getEnemyPokemon().imgbattlefront}/>
@@ -315,7 +335,7 @@ function BattleScreen({ route, navigation }) {
         }
     }
     function getMyImage(){
-        if(damaged && turn == currentUser){
+        if(damaged && damaged_player && currentUser===damaged_player){
             return(
                 <Blink duration={100}>
                     <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
@@ -327,16 +347,12 @@ function BattleScreen({ route, navigation }) {
             );
         }
     }
+
+
     function getMyHp(){
-        if(damaged && turn == currentUser){
-            return(
-                <Text style={[styles.hpText,{color:'red'}]}> {getMyState()[0]}</Text>
-            );
-        }else{
-            return(
-                 <Text style={styles.hpText}> {getMyState()[0]}</Text>
-            );
-        } 
+        return(
+                <Text style={styles.hpText}> {getMyState()[0]}</Text>
+        );
     }
 
     function getTurnPokemonName(){
@@ -392,7 +408,6 @@ function BattleScreen({ route, navigation }) {
         }
     }
 
-    
     if(!gameOver){
         return (
             <View style={styles.container}>
@@ -458,9 +473,9 @@ function BattleScreen({ route, navigation }) {
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                          <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(0)}>
                              <Text style={styles.buttonText}>{skill1}</Text>
-                             <Text style={styles.spText}>SP:1</Text>
+                             <Text style={styles.spText}>SP:0</Text>
                          </TouchableOpacity>
-                         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2} onPress={()=>onSkillPressedHandler(1)}>
+                         <TouchableOpacity style={[styles.button,{backgroundColor:route.params.color}]} disabled={turn!==currentUser || users.length < 2 || skillpoint < 1} onPress={()=>onSkillPressedHandler(1)}>
                              <Text style={styles.buttonText}>{skill2}</Text>
                              <Text style={styles.spText}>SP:1</Text>
                          </TouchableOpacity> 
