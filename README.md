@@ -37,7 +37,7 @@
 # Application Information
 ## 0. Loding & Login & SignUp
 
-<img src="https://user-images.githubusercontent.com/68576681/177273659-f9427d7f-33de-47d6-9ed2-6c4a791f6416.gif" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177275755-e7c8f0ad-66c0-4bc3-b695-47066ea39029.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177275760-c971c2db-e492-48c9-afd7-e67f9eafae38.jpg" width="200" height="400">
+<img src="https://user-images.githubusercontent.com/89140546/178481682-cdc9b49d-1ae3-4772-af0b-73e135be01fc.jpg" width="200" height="400"> 
 ### Major Features
 * 이미지 데이터를 미리 받아오는 동안 로딩 이미지가 표시됩니다.
 * 이메일과 비밀번호를 입력받아 데이터 베이스의 사용자 정보와 비교흫 통해 로그인을 할 수 있습니다
@@ -49,11 +49,10 @@
 * MySQL 를 사용하여 모든 유저들의 정보를 서버에 저장해놓았습니다
 * 따라서 다른 기기에서도 동일한 ID로 로그인 할 수 있습니다
 * 카카오톡 로그인의 경우 api key와 axios를 사용해 서버와 통신을 합니다
-<img src="https://user-images.githubusercontent.com/68576681/177285926-a6c1b166-fa71-46ab-b383-7c00b57a0018.png" height="400">
 
 ## 1. RoomScreen
 
-<img src="https://user-images.githubusercontent.com/68576681/177273675-c6d1120a-2c9f-4ebc-a1ac-f01f4c3a6b2f.gif" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177277727-53a7753e-7cbe-4dd7-89c3-b4389ec81eac.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177277729-40e3eee9-9d14-4c35-bf74-8bb32100a94b.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177277735-9118e859-c626-4971-b0d5-b966ea07ce7b.jpg" width="200" height="400"> 
+<img src="https://user-images.githubusercontent.com/89140546/178481691-703589c5-24d0-4cb4-81bc-1d975641e8fa.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/89140546/178481696-bc3c2ec9-4693-4a25-b68a-56524f977ef8.jpg" width="200" height="400">  
 ### Major Features
 * 로그인 화면에서 사용자의 이름을 받아 유저 이름을 띄워 줍니다.
 * Exit 이미지 버튼을 누르면 로그인 화면으로 돌아가게 됩니다
@@ -68,7 +67,7 @@
 
 ## 2. SelectScreen
 
-<img src="https://user-images.githubusercontent.com/68576681/177276000-107f4dfc-96c5-4ac8-b19d-7333732a7ed4.gif" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177277676-1e837306-c43c-4305-a5bd-d5d8fca9aedf.jpg" width="200" height="400"> <img src="https://user-images.githubusercontent.com/68576681/177277682-dd60dac1-7654-4e10-a5f4-90a5f91bb9ae.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177277684-f33ba12b-7e3d-4b5b-8509-39c6c7353089.jpg" width="200" height="400"> 
+<img src="https://user-images.githubusercontent.com/89140546/178481699-a31c1c6e-3691-4c3f-a686-1688657e5875.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/89140546/178481701-b0db7f1c-15ec-4833-b5fb-b67780273a2d.jpg" width="200" height="400">
 ### Major Features
 * 5가지 포켓몬 중에서 플레이 할 포켓몬을 정합니다.
   * 특정 포켓몬 색깔에 따라 고유 색깔이 정해집니다.
@@ -80,7 +79,7 @@
 
 ## 3. BattleScreen
 
-<img src="https://user-images.githubusercontent.com/68576681/177273474-0471dd5e-8ff1-4517-a97a-fd411e3ca207.gif" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177282112-314a298b-bab5-4e2c-a8e0-4e1931dcd22a.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177282173-30249241-e273-4e48-87df-c7db7cb140a4.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177283677-ae249225-5ed3-4374-a847-c2e4e9edbad8.PNG" width="200" height="400">
+<img src="https://user-images.githubusercontent.com/89140546/178483273-b345b152-bb3e-429a-ac53-cc61c562fc9d.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/89140546/178483279-48dd2699-5cc5-400e-8f81-fe00b334ba4a.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/89140546/178483286-e3974b8b-0335-4bf7-81e3-e2f60bddd5ce.jpg" width="200" height="400"> 
 
 ### Major Features
 * 같은 방 코드에 상대방이 입장할 때까지 기다립니다.
@@ -102,7 +101,7 @@
 
 ## 4.EndScreen
 
-<img src="https://user-images.githubusercontent.com/68576681/177273474-0471dd5e-8ff1-4517-a97a-fd411e3ca207.gif" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177282112-314a298b-bab5-4e2c-a8e0-4e1931dcd22a.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177282173-30249241-e273-4e48-87df-c7db7cb140a4.jpg" width="200" height="400">  <img src="https://user-images.githubusercontent.com/68576681/177283677-ae249225-5ed3-4374-a847-c2e4e9edbad8.PNG" width="200" height="400">
+<img src="https://user-images.githubusercontent.com/89140546/178483278-ddd9934e-433b-45e9-a7ba-4687eb74166c.jpg" width="200" height="400"> 
 
 ### Major Features
 * 게임 결과 따라 Win, Lose가 결정됩니다.
