@@ -17,6 +17,10 @@ function BattleScreen({ route, navigation }) {
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState('');
     const [skillpoint, setSkillPoint] = useState(1);
+    const [skilltext, setSkillText] = useState("");
+    const [typetext, setTypeText] = useState("");
+    const [onevent, setOnEvent] = useState(false);
+    const [damaged, setDamaged] = useState(false);
     
     useEffect(() => {
         const connectionOptions =  {
@@ -85,6 +89,14 @@ function BattleScreen({ route, navigation }) {
         })
     }, []);
     
+    
+    if(onevent){
+        socket.emit('wait');
+        socket.on('reupdate',()=>{
+            setOnEvent(false);
+            setDamaged(false);
+        })
+    }
 
     useEffect(() => {
         socket.on('initGameState', ({ gameOver, turn, p1_state, p2_state, player1_pokemon, player2_pokemon }) => {
@@ -101,8 +113,7 @@ function BattleScreen({ route, navigation }) {
         });
 
 
-        socket.on('updateGameState', ({ gameOver, winner, turn, p1_state, p2_state}) => {
-            console.log(gameOver)
+        socket.on('updateGameState', ({ gameOver, winner, turn, p1_state, p2_state, skilltext, typetext}) => {
             gameOver && setGameOver(gameOver);
             winner && setWinner(winner);
             turn && setTurn(turn);
@@ -112,6 +123,9 @@ function BattleScreen({ route, navigation }) {
             // player2_defense && setPlayer2Defense(player2_defense);
             p1_state && setPlayer1State(p1_state)
             p2_state && setPlayer2State(p2_state)
+            skilltext && setSkillText(skilltext)
+            typetext && setTypeText(typetext)
+            setOnEvent(true)
         });
     },[]);
 
@@ -146,8 +160,11 @@ function BattleScreen({ route, navigation }) {
                     winner: checkWinner(p2_state[0]+delta[3], 'Player 1'),
                     turn: 'Player 2',
                     p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
-                    p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]]
+                    p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]],
+                    skilltext: delta[6],
+                    typetext: delta[7]
                 })
+                if(delta[3]<0) setDamaged(true);
             }
             else{
                 socket.emit('updateGameState', {
@@ -155,8 +172,11 @@ function BattleScreen({ route, navigation }) {
                     winner: checkWinner(p1_state[0]+delta[0], 'Player 2'),
                     turn: 'Player 1',
                     p1_state: [p1_state[0]+delta[0], p1_state[1]+delta[1], p1_state[2]+delta[2]],
-                    p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]]
+                    p2_state: [p2_state[0]+delta[3], p2_state[1]+delta[4], p2_state[2]+delta[5]],
+                    skilltext: delta[6],
+                    typetext: delta[7]
                 })
+                if(delta[0]<0) setDamaged(true);
             }   
         }
         switch(skill_idx){
@@ -178,21 +198,31 @@ function BattleScreen({ route, navigation }) {
         const skillDamage = skill[2];
         const skillTarget = skill[4];
 
-        var state = useSkill(skillType,skillDamage, player,skillTarget);
+        var state = useSkill(player_pokemon, skillName, skillType,skillDamage, player,skillTarget);
+
         return state
     }
 
-    function useSkill(skillType,skillDamage,player,skillTarget){
+    function useSkill(player_pokemon, skillName, skillType,skillDamage,player,skillTarget){
         var p1_hp=0
         var p1_atk=0
         var p1_df=0
         var p2_hp=0
         var p2_atk=0
         var p2_df=0
+        var skilltext=player_pokemon.name+"의 "+skillName
+        var typetext=" "
+
         if(player=='Player 1'){
             switch(skillType){
                 case '공격': 
                     p2_hp = parseInt(skillDamage*checkType(skillTarget,player2_pokemon.type)*(1-p2_state[2]/100+p1_state[1]/100)>=p2_state[0] ? -p2_state[0] : -skillDamage*checkType(skillTarget,player2_pokemon.type)*(1-p2_state[2]/100+p1_state[1]/100))
+                    if(checkType(skillTarget,player2_pokemon.type)==2){
+                        typetext="효과가 굉장했다!!!"
+                    }
+                    else if(checkType(skillTarget,player2_pokemon.type)==0.5){
+                        typetext="효과가 별로인듯 하다..."
+                    }
                     break;
                 case '힐':
                     p1_hp = skillDamage+p1_state[0]>=player1_pokemon.health ? player1_pokemon.health-p1_state[0] : skillDamage
@@ -215,6 +245,12 @@ function BattleScreen({ route, navigation }) {
             switch(skillType){
                 case '공격': 
                     p1_hp = parseInt(skillDamage*checkType(skillTarget,player1_pokemon.type)*(1-p1_state[2]/100+p2_state[1]/100)>=p1_state[0] ? -p1_state[0] : -skillDamage*checkType(skillTarget,player1_pokemon.type)*(1-p1_state[2]/100+p2_state[1]/100))
+                    if(checkType(skillTarget,player1_pokemon.type)==2){
+                        typetext="효과가 굉장했다!!!"
+                    }
+                    else if(checkType(skillTarget,player1_pokemon.type)==0.5){
+                        typetext="효과가 별로인듯 하다..."
+                    }
                     break;
                 case '힐':
                     p2_hp = skillDamage+p2_state[0]>=player2_pokemon.health ? player2_pokemon.health-p2_state[0] : skillDamage
@@ -233,9 +269,9 @@ function BattleScreen({ route, navigation }) {
                     break;
             }
         }
-        console.log(p1_hp,p2_hp,p1_df,p2_df)
 
-        return [p1_hp, p1_atk, p1_df, p2_hp, p2_atk, p2_df]   
+
+        return [p1_hp, p1_atk, p1_df, p2_hp, p2_atk, p2_df, skilltext, typetext]   
     }
 
     function getMyPokemon(){
@@ -254,6 +290,41 @@ function BattleScreen({ route, navigation }) {
         return currentUser=='Player 1'?p2_state:p1_state;
     }
 
+    function getTurnPokemonName(){
+        return turn=="Player 1"?player2_pokemon.name:player1_pokemon.name;
+    }
+
+    function getTextBox(){
+        if(users.length < 2){
+            if(turn!==currentUser){
+                return "상대방이 나갔습니다. 방을 다시 생성해 주십시오"
+            }
+            else{
+                return "상대방의 입장을 기다리는 중입니다"
+            }
+        }
+        else if(JSON.stringify(p1_state)===JSON.stringify([users[0].pokemon.health, 0, 0]) && 
+        JSON.stringify(p2_state)===JSON.stringify([users[1].pokemon.health, 0, 0])){
+            if(turn!==currentUser){
+                return "상대방의 선택을 기다리는 중입니다"
+            }
+            else{
+                return pokemon.name+"은(는) 무엇을 할까?"
+            }
+        }
+        else{
+            if(onevent)
+                return (turn!==currentUser?"":"상대 ")+skilltext+"! "+typetext;
+            else{
+                if(turn!==currentUser){
+                    return "상대방의 선택을 기다리는 중입니다"
+                }
+                else{
+                    return pokemon.name+"은(는) 무엇을 할까?"
+                }
+            }
+        }
+    }
 
     
     if(!gameOver){
@@ -278,6 +349,8 @@ function BattleScreen({ route, navigation }) {
                             style={styles.characterImage}
                             source={getEnemyPokemon().imgbattlefront}/>}
                     </View>
+                    <View style={{flex: 0.6}}>
+                    </View> 
                     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
                         <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
                         <TouchableOpacity style={styles.hpbar} disabled={true}>
@@ -297,8 +370,8 @@ function BattleScreen({ route, navigation }) {
                     <Text style={{fontSize: 20, color:'black',fontWeight:'bold'}}>Skill Point: {skillpoint}</Text>
                 </ImageBackground>
 
-                <View style={{backgroundColor: "white", flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text> text </Text>
+                <View style={{fontSize: 20, backgroundColor: "white", flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
+                    <Text> {getTextBox()} </Text>
                 </View> 
                 
                 {(users.length < 2 || turn!==currentUser) ? 
@@ -372,7 +445,7 @@ function BattleScreen({ route, navigation }) {
         flexDirection:'row',
     },
     hpbar: {
-        width: '50%',
+        width: '55%',
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
         height: 55,
         borderRadius: 50,
