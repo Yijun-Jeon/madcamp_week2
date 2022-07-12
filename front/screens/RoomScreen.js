@@ -49,7 +49,7 @@ function RoomScreen({ route, navigation }) {
                     <Text style={styles.heading}>User Name:</Text>
                     <Text style={[styles.heading,{color:'black'}]}>{userName}</Text>
                 </View>
-                <TouchableOpacity onPress={moveToLogin}>
+                <TouchableOpacity onPress={moveToLogin} style={{height:40}}>
                     <Image source={require('../public/images/exit.png')} style={{width:70,height:70,marginRight:'4%',marginTop:'3%'}} ></Image>
                 </TouchableOpacity>
             </View>

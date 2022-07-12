@@ -2,6 +2,7 @@ import { View, Text, ImageBackground,StyleSheet,TouchableOpacity,TextInput, Imag
 import React, { useState, useEffect} from 'react';
 import io from 'socket.io-client';
 import { checkType } from '../utils/character/Skills';
+import Blink from './Blink'
 
 const SOCKET_URL ='http://192.249.18.107:443';
 
@@ -300,6 +301,44 @@ function BattleScreen({ route, navigation }) {
         return currentUser=='Player 1'?p2_state:p1_state;
     }
 
+    function getEnemyImage(){
+        if(damaged && turn != currentUser){
+            return(
+                <Blink duration={100}>
+                    <Image style={styles.characterImage} source={getEnemyPokemon().imgbattlefront}/>
+                </Blink>
+            );
+        }else{
+            return(
+                <Image style={styles.characterImage} source={getEnemyPokemon().imgbattlefront}/>
+            );
+        }
+    }
+    function getMyImage(){
+        if(damaged && turn == currentUser){
+            return(
+                <Blink duration={100}>
+                    <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
+                </Blink>
+            );
+        }else{
+            return(
+                <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
+            );
+        }
+    }
+    function getMyHp(){
+        if(damaged && turn == currentUser){
+            return(
+                <Text style={[styles.hpText,{color:'red'}]}> {getMyState()[0]}</Text>
+            );
+        }else{
+            return(
+                 <Text style={styles.hpText}> {getMyState()[0]}</Text>
+            );
+        } 
+    }
+
     function getTurnPokemonName(){
         return turn=="Player 1"?player2_pokemon.name:player1_pokemon.name;
     }
@@ -371,20 +410,15 @@ function BattleScreen({ route, navigation }) {
                             <Text style>%</Text>
                             <Image source={require('../public/images/defense.png')} style={styles.buttonImage}></Image>
                         </TouchableOpacity> }
-                        {users.length==2 && 
-                        <Image
-                            style={styles.characterImage}
-                            source={getEnemyPokemon().imgbattlefront}/>}
+                        {users.length==2 && getEnemyImage()} 
                     </View>
                     <View style={{flex: 0.75}}>
                     </View> 
-                    <View style={{flex: 1.25, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
-                        <Image style={styles.characterImage} source={pokemon.imgbattleback}/>
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginBottom:50}}>
+                        {getMyImage()}
                         <TouchableOpacity style={styles.hpbar} disabled={true}>
-                            {users.length==2 ?
-                            <Text style={styles.hpText}> {getMyState()[0]}/{pokemon.health} </Text> :
-                            <Text style={styles.hpText}> {pokemon.health}/{pokemon.health} </Text>
-                            }
+                            {users.length==2 ? getMyHp() : <Text style={styles.hpText}> {pokemon.health}</Text>}
+                            <Text style={styles.hpText}>/{pokemon.health}</Text>
                             <Image source={require('../public/images/attack.png')} style={styles.buttonImage}></Image>
                             {users.length==2 ?
                             <Text style={styles.defenseText}> {getMyState()[1]}/{getMyState()[2]} </Text> :
