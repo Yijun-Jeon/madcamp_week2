@@ -12,7 +12,7 @@ function SelectScreen({route, navigation}){
     const [type,setType] = useState('전기');
     const [killo, setKillo] = useState('6.0kg');
     const [species,setSpecies] = useState('쥐 포켓몬');
-    const [textColor, setTextColor] = useState('yellow');
+    const [textColor, setTextColor] = useState('rgba(250, 255, 0,0.8)');
     
     const selectPikachu = () =>{
         setPokemon(pokemons[0]);
@@ -20,7 +20,7 @@ function SelectScreen({route, navigation}){
         setType('전기');
         setKillo('6.0kg');
         setSpecies('쥐 포켓몬');
-        setTextColor('yellow');
+        setTextColor('rgba(250, 255, 0,0.8)');
     }
 
     const selectPaili = () =>{
@@ -29,7 +29,7 @@ function SelectScreen({route, navigation}){
         setType('불꽃');
         setKillo('8.5kg');
         setSpecies('도롱뇽 포켓몬');
-        setTextColor('orange');
+        setTextColor('rgba(255, 153, 0,0.8)');
     }
 
     const selectKkobugi = () =>{
@@ -38,7 +38,7 @@ function SelectScreen({route, navigation}){
         setType('물');
         setKillo('9.0kg');
         setSpecies('꼬마거북 포켓몬');
-        setTextColor('rgba(154, 236, 219,1.0)');
+        setTextColor('rgba(154, 236, 219,0.8)');
     }
 
     const selectIsanghaessi = () =>{
@@ -47,7 +47,7 @@ function SelectScreen({route, navigation}){
         setType('풀 / 독');
         setKillo('6.9kg');
         setSpecies('씨앗 포켓몬');
-        setTextColor('green');
+        setTextColor('rgba(102, 255, 051,0.8)');
     }
 
     const selectMyu = () =>{
@@ -56,7 +56,7 @@ function SelectScreen({route, navigation}){
         setType('에스퍼');
         setKillo('4.0kg');
         setSpecies('신종 포켓몬');
-        setTextColor('pink');
+        setTextColor('rgba(255, 204, 255,0.8)');
     }
     
     const moveToBattle = () =>{
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     card: {
         flex: 1,
         flexDirection: 'row',
-        backgroundColor: 'rgba(250, 170, 90, 0.2)',
+        backgroundColor: 'rgba(223, 246, 255,0.5)',
         marginTop: '10%',
         marginBottom:'20%',
         borderRadius: 20,
